@@ -1,0 +1,10 @@
+<svg width="240" height="240" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
+  <!-- Голова -->
+  <circle cx="120" cy="90" r="45" fill="#9CA3AF"/>
+
+  <!-- Тело -->
+  <path d="M40 210
+           C40 155 75 130 120 130
+           C165 130 200 155 200 210
+           Z" fill="#9CA3AF"/>
+</svg>

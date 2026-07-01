@@ -1,0 +1,20 @@
+{
+  "folders": [
+    { "name": "client", "path": "client" },
+    { "name": "server", "path": "server" },
+    { "name": "shared", "path": "shared" },
+    { "name": "root", "path": "." }
+  ],
+  "settings": {
+    "editor.formatOnSave": false,
+    "i18n-ally.localesPaths": ["src/locales"],
+    "i18n-ally.keystyle": "nested",
+    "i18n-ally.framework": "vue",
+    "i18n-ally.sourceLanguage": "ru",
+    "i18n-ally.displayLanguage": "ru",
+    "i18n-ally.enabledParsers": ["json"],
+    "i18n-ally.annotations": true,
+    "i18n-ally.annotationInPlace": true,
+    "i18n-ally.annotationMaxLength": 40
+  }
+}

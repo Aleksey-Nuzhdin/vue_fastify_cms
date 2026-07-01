@@ -1,0 +1,337 @@
+{
+  "admin__report-cards__status":{
+    "waiting":"Waiting",
+    "published":"Published",
+    "draft":"Draft",
+    "rejected":"Rejected"
+  },
+  "admin__user-card__plan":{
+    "basic":"Basic",
+    "pro":"Pro",
+    "enterprise":"Enterprise",
+    "undefined":"Not specified"
+  },
+  "validation": {
+    "required": "Required field",
+    "invalidValue": "Invalid value",
+    "minLength": "Minimum {n} characters",
+    "maxLength": "Maximum {n} characters",
+    "passwordPattern": "Password must contain only Latin letters, digits and special characters",
+    "fullName": "Enter your full name",
+    "phoneIncomplete": "Enter the full phone number",
+    "consentRequired": "Consent is required to register",
+    "email": {
+      "invalid": "Invalid email",
+      "checking": "Checking email",
+      "taken": "Email is already taken",
+      "required": "Enter your email",
+      "invalidShort": "Enter a valid email"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Sign in",
+      "forgotPassword": "Forgot password?",
+      "submit": "Sign in",
+      "noAccount": "Don't have an account?",
+      "register": "Sign up",
+      "popupError": "Failed to sign in"
+    },
+    "register": {
+      "back": "Back",
+      "continue": "Continue",
+      "consentPrefix": "I agree to the",
+      "consentLink": "processing of personal data",
+      "hasAccount": "Already have an account?",
+      "signIn": "Sign in",
+      "closed": "Registration is closed",
+      "loading": "Loading",
+      "popupErrorTitle": "Registration error"
+    },
+    "forgot": {
+      "title": "Password recovery",
+      "info": "Enter the email address you used to register. We will send a confirmation code to it.",
+      "login": "Sign in",
+      "register": "Sign up",
+      "sendCode": "Send code",
+      "enterCode": "Enter code",
+      "spamHint": "The email may take a few minutes to arrive. Please also check your Spam folder.",
+      "confirmTitle": "Confirmation",
+      "codePlaceholder": "Code from the message",
+      "newPasswordPlaceholder": "New password",
+      "apply": "Apply",
+      "back": "Back",
+      "successTitle": "Password changed successfully",
+      "signIn": "Sign in",
+      "errorTitle": "Failed to change password"
+    }
+  },
+  "profile": {
+    "actions": {
+      "edit": "Edit",
+      "changePassword": "Change password",
+      "save": "Save",
+      "cancel": "Cancel"
+    },
+    "updateSuccess": "Profile updated successfully",
+    "password": {
+      "info": "Enter your old and new password",
+      "oldPlaceholder": "Old password",
+      "newPlaceholder": "New password",
+      "fillAllFields": "Fill in all fields",
+      "samePassword": "Passwords must not match",
+      "success": "Password changed successfully",
+      "errorTitle": "Failed to change password",
+      "wrongOldPassword": "The old password is incorrect"
+    },
+    "avatar": {
+      "selectFile": "Select a file",
+      "upload": "Upload"
+    }
+  },
+  "common": {
+    "logoAlt": "Logo",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "close": "Close",
+    "save": "Save",
+    "create": "Create",
+    "name": "Name",
+    "description": "Description",
+    "confirmDelete": "Are you sure you want to delete:",
+    "home": "Go home",
+    "back": "Back",
+    "select": "Select",
+    "add": "Add",
+    "emptyList": "List is empty",
+    "loadError": "Loading error"
+  },
+  "quill": {
+    "collapse": "Collapse",
+    "expand": "Expand",
+    "clear": "Clear",
+    "placeholder": "Enter text",
+    "openInNewTab": "Open in a new tab"
+  },
+  "reports": {
+    "view": {
+      "title": "View report",
+      "authors": "Authors",
+      "section": "Section",
+      "annotation": "Abstract",
+      "additionalMaterials": "Additional materials",
+      "file": "File"
+    },
+    "list": {
+      "empty": "You don't have any reports yet.",
+      "emptyHint": "You can add a new report in the «Submit a report» section."
+    },
+    "wrapper": {
+      "title": "Submitting a report for the conference",
+      "intro": "The report must be presented in Russian and English and include:",
+      "reqAuthors": "author details (surname, first name, patronymic, academic degree, name of workplace / place of study, city, country, email);",
+      "reqTitle": "the full report title (no more than 7 words);",
+      "reqAnnotation": "an abstract — 200 words with a mandatory statement of the report's purpose;",
+      "reqParticipation": "conference participation: in person, remote, or correspondence (video recording of the report).",
+      "submit": "Submit report",
+      "saveDraft": "Save as draft"
+    },
+    "form": {
+      "materials": "Report materials"
+    },
+    "card": {
+      "index": "Report #{n}",
+      "deleteTitle": "Delete report",
+      "confirmDelete": "Are you sure you want to delete the report:",
+      "status": {
+        "waiting": "Report submitted",
+        "published": "Report approved",
+        "draft": "Draft",
+        "rejected": "Report rejected"
+      }
+    },
+    "nav": {
+      "myReports": "My reports",
+      "submit": "Submit a report"
+    }
+  },
+  "home": {
+    "sectionTitle": "Title",
+    "archive": "Archive",
+    "register": "Registration",
+    "program_to_pdf":"Program in PDF"
+  },
+  "fileSelect": {
+    "inputPlaceholder": "Enter a link or select a file",
+    "modalTitle": "Select a file",
+    "selectedFile": "Selected file",
+    "extension": "Extension",
+    "empty": "Folder is empty"
+  },
+  "test": {
+    "nav": {
+      "buttons": "Buttons",
+      "inputs": "Inputs",
+      "richText": "Rich text",
+      "form": "Form"
+    },
+    "quill": {
+      "titleLabel": "Rich text title",
+      "placeholder": "Placeholder"
+    },
+    "buttons": {
+      "colors": "Colors",
+      "withIcon": "With icon",
+      "iconLeft": "Icon left",
+      "iconRight": "Icon right",
+      "delete": "Delete",
+      "upload": "Upload",
+      "iconOnly": "Icon only",
+      "text": "Text",
+      "radius": "Radius",
+      "customStyles": "Custom styles"
+    },
+    "form": {
+      "name": "Test",
+      "textLabel": "Text",
+      "enterText": "Enter text",
+      "fileSelectLabel": "File selection",
+      "fileSelectPlaceholder": "Select a file from the list",
+      "passwordLabel": "Password",
+      "passwordPlaceholder": "Enter your password",
+      "selectLabel": "Select",
+      "selectPlaceholder": "Select something",
+      "multiSelectLabel": "Multi-select",
+      "arrayListLabel": "Array list 1",
+      "title": "Title",
+      "button": "Button"
+    }
+  },
+  "admin": {
+    "files": {
+      "createFolderBtn": "Create folder",
+      "uploadFileBtn": "Upload file",
+      "empty": "Folder is empty",
+      "createFolderTitle": "Create folder",
+      "uploadFileTitle": "Upload file",
+      "editFileTitle": "Edit file",
+      "deleteFileTitle": "Delete file",
+      "fileInfoTitle": "File information",
+      "editFolderTitle": "Edit folder",
+      "deleteFolderTitle": "Delete folder",
+      "folderNameLabel": "Folder name",
+      "folderNamePlaceholder": "Enter folder name",
+      "fileLabel": "File",
+      "filePlaceholder": "Select a file to upload",
+      "fileNameLabel": "File name",
+      "fileNamePlaceholder": "Enter file name",
+      "namePlaceholder": "Enter name",
+      "descriptionPlaceholder": "Enter description",
+      "replaceFile": "Replace file",
+      "selectImage": "Select an image",
+      "selectFile": "Select a file (.{ext})",
+      "onlyImage": "Only an image can be uploaded",
+      "wrongExtension": "Extension must be .{ext}",
+      "extension": "Extension",
+      "link": "Link",
+      "linkCopied": "Link copied",
+      "linkCopiedPopup": "Link copied to clipboard",
+      "copyLink": "Copy link",
+      "download": "Download"
+    },
+    "pagesData": {
+      "pagesTitle": "Pages",
+      "selectPagePlaceholder": "Select a page from the list",
+      "saving": "Saving...",
+      "saveSuccess": "Data saved successfully",
+      "saveError": "Failed to save data"
+    },
+    "users": {
+      "namePlaceholder": "Name",
+      "emailPlaceholder": "Email",
+      "phonePlaceholder": "Phone",
+      "planPlaceholder": "Plan",
+      "planAll": "All",
+      "empty": "List is empty",
+      "roleLabel": "Role",
+      "rolePlaceholder": "Select a role",
+      "roles": {
+        "admin": "Admin",
+        "user": "User",
+        "vereficator": "Validator"
+      },
+      "editTitle": "Edit user",
+      "deleteTitle": "Delete user",
+      "confirmDeleteUser": "Are you sure you want to delete the user:",
+      "deleted": "User deleted",
+      "deleteError": "Failed to delete user",
+      "updated": "User updated",
+      "updateError": "Failed to update user"
+    },
+    "reports": {
+      "statusFilter": {
+        "all": "All",
+        "waiting": "Waiting",
+        "published": "Approved",
+        "draft": "Draft",
+        "rejected": "Rejected"
+      },
+      "statusPlaceholder": "Report status",
+      "userNamePlaceholder": "User name",
+      "authorNamePlaceholder": "Author name",
+      "editTitle": "Edit report",
+      "approve": "Approve",
+      "reject": "Reject",
+      "deleteTitle": "Delete report",
+      "confirmDelete": "Are you sure you want to delete the report:",
+      "deleted": "Report deleted",
+      "deleteError": "Failed to delete report",
+      "statusUpdated": "Report status updated",
+      "statusUpdateError": "Failed to update status"
+    }
+  },
+  "nav": {
+    "account": "Account",
+    "logout": "Log out",
+    "profile": "Profile",
+    "reports": "Reports",
+    "admin": "Admin",
+    "pagesData": "Pages data",
+    "files": "Files",
+    "users": "Users"
+  },
+  "layout": {
+    "authTitle": "authorization"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "text": "The requested page does not exist or has been moved."
+  },
+  "router": {
+    "home": "Home",
+    "register": "Registration"
+  },
+  "errors": {
+    "UNAUTHORIZED": "Session expired, please sign in again",
+    "FORBIDDEN": "Not enough permissions",
+    "NOT_FOUND": "Not found",
+    "CONFLICT": "Record already exists",
+    "VALIDATION_ERROR": "Please check the entered data",
+    "ACTION_COOLDOWN": "Please try again in 5 minutes",
+    "INTERNAL_ERROR": "Server error, please try again later",
+    "NETWORK_ERROR": "No connection to the server",
+    "UNKNOWN_ERROR": "Something went wrong",
+    "login": {
+      "UNAUTHORIZED": "Invalid email or password"
+    },
+    "register": {
+      "CONFLICT": "A user with this email already exists"
+    },
+    "forgotPassword": {
+      "NOT_FOUND": "No user found with this email"
+    },
+    "resetPassword": {
+      "VALIDATION_ERROR": "Invalid code"
+    }
+  }
+}

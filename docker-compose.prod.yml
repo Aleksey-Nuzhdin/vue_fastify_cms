@@ -1,0 +1,38 @@
+name: VFC-prod
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    ports:
+      - "${PRODACTION_PORT:-3000}:3000"
+    volumes:
+      - uploads_data:/app/public/upload
+    env_file:
+      - .env.production
+    environment:
+      - NODE_ENV=production
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 2s
+      timeout: 5s
+      retries: 5
+    expose:
+      - "6379"
+    command: redis-server --appendonly yes
+
+volumes:
+  redis_data:
+  uploads_data:

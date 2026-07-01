@@ -1,0 +1,9 @@
+@use 'variables' as *;
+
+:export {
+  breakpointXs: $breakpoint-xs;
+  breakpointSm: $breakpoint-sm;
+  breakpointMd: $breakpoint-md;
+  breakpointLg: $breakpoint-lg;
+  breakpointXl: $breakpoint-xl;
+}

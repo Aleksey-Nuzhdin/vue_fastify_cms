@@ -1,0 +1,24 @@
+<svg width="420" height="140" viewBox="0 0 420 140" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6366F1"/>
+      <stop offset="100%" stop-color="#8B5CF6"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Знак (лого) слева -->
+  <g>
+    <rect x="10" y="10" width="120" height="120" rx="24" fill="url(#bg)"/>
+    <rect x="18" y="18" width="104" height="104" rx="16" fill="none" stroke="#ffffff" stroke-opacity="0.25" stroke-width="2" stroke-dasharray="5 5"/>
+
+    <circle cx="70" cy="58" r="26" fill="#ffffff" fill-opacity="0.18"/>
+    <polygon points="70,30 95,72 45,72" fill="#ffffff" fill-opacity="0.9"/>
+    <circle cx="70" cy="64" r="12" fill="#ffffff"/>
+  </g>
+
+  <!-- Текст справа -->
+  <g>
+    <text x="150" y="70" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="700" fill="#1F2937">BRAND</text>
+    <text x="150" y="95" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="400" fill="#6B7280" letter-spacing="2">TAGLINE / SLOGAN</text>
+  </g>
+</svg>

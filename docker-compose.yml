@@ -1,0 +1,62 @@
+services:
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile.server
+    env_file:
+      - .env 
+    ports:
+      - "${SERVER_PORT:-3000}:3000"
+    volumes:
+      - ./server/public/upload:/app/public/upload
+      - ./shared:/shared
+    develop:
+      watch:
+        - action: sync
+          path: ./server/src
+          target: /app/src
+    environment:
+      - NODE_ENV=development
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      redis:
+        condition: service_healthy  # ждём пока Redis будет готов
+
+  client:
+    build:
+      context: .
+      dockerfile: Dockerfile.client
+    env_file:
+      - .env 
+    ports:
+      - "${CLIENT_PORT:-5173}:5173"
+    volumes:
+      - ./client/src:/app/src
+      - ./client/public:/app/public
+      - ./client/vite.config.ts:/app/vite.config.ts
+      - ./shared:/shared
+    develop:
+      watch:
+        - action: sync
+          path: ./client/src
+          target: /app/src
+    environment:
+      - NODE_ENV=development    
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+
+volumes:
+  server_modules:   # node_modules сервера
+  client_modules:   # node_modules клиента
+  redis_data:       # данные Redis (кэш, сессии)

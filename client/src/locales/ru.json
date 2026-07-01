@@ -1,0 +1,337 @@
+{
+  "admin__report-cards__status": {
+    "waiting": "Ожидает",
+    "published": "Одобрен",
+    "draft": "Черновик",
+    "rejected": "Отклонен"
+  },
+  "admin__user-card__plan":{
+    "basic":"Базовый",
+    "pro":"Про",
+    "enterprise":"Корпоративный",
+    "undefined":"Не указан"
+  },
+  "validation": {
+    "required": "Обязательное поле",
+    "invalidValue": "Некорректное значение",
+    "minLength": "Минимум {n} символов",
+    "maxLength": "Максимум {n} символов",
+    "passwordPattern": "Пароль должен состоять из латинских букв, цифр и спецсимволов",
+    "fullName": "Укажите полное ФИО",
+    "phoneIncomplete": "Укажите полный номер",
+    "consentRequired": "Для регистрации необходимо согласие",
+    "email": {
+      "invalid": "Некорректный email",
+      "checking": "Email проверяется",
+      "taken": "Email занят",
+      "required": "Введите email",
+      "invalidShort": "Введите корректный email"
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Вход",
+      "forgotPassword": "Забыли пароль?",
+      "submit": "Вход",
+      "noAccount": "Еще нет аккаунта?",
+      "register": "Регистрация",
+      "popupError": "Не удалось войти"
+    },
+    "register": {
+      "back": "Назад",
+      "continue": "Продолжить",
+      "consentPrefix": "Согласие на",
+      "consentLink": "обработку персональных данных",
+      "hasAccount": "Уже есть аккаунт?",
+      "signIn": "Вход",
+      "closed": "Регистрация закрыта",
+      "loading": "Загрузка",
+      "popupErrorTitle": "Ошибка при регистрации"
+    },
+    "forgot": {
+      "title": "Восстановление пароля",
+      "info": "Введите адрес электронной почты, указанный при регистрации. Мы отправим на него код подтверждения.",
+      "login": "Авторизация",
+      "register": "Регистрация",
+      "sendCode": "Отправить код",
+      "enterCode": "Ввести код",
+      "spamHint": "Письмо может прийти в течении нескольких минут. Также проверьте папку «Спам».",
+      "confirmTitle": "Подтверждение",
+      "codePlaceholder": "Код из сообщения",
+      "newPasswordPlaceholder": "Новый пароль",
+      "apply": "Применить",
+      "back": "Назад",
+      "successTitle": "Пароль успешно изменён",
+      "signIn": "Войти",
+      "errorTitle": "Не удалось изменить пароль"
+    }
+  },
+  "profile": {
+    "actions": {
+      "edit": "Редактировать",
+      "changePassword": "Сменить пароль",
+      "save": "Сохранить",
+      "cancel": "Отменить"
+    },
+    "updateSuccess": "Профиль успешно изменен",
+    "password": {
+      "info": "Укажите старый и новый пароль",
+      "oldPlaceholder": "Старый пароль",
+      "newPlaceholder": "Новый пароль",
+      "fillAllFields": "Заполните все поля",
+      "samePassword": "Пароли не должны совпадать",
+      "success": "Пароль успешно изменен",
+      "errorTitle": "Не удалось изменить пароль",
+      "wrongOldPassword": "Неверно указан старый пароль"
+    },
+    "avatar": {
+      "selectFile": "Выберите файл",
+      "upload": "Загрузить"
+    }
+  },
+  "common": {
+    "logoAlt": "Логотип",
+    "delete": "Удалить",
+    "cancel": "Отмена",
+    "close": "Закрыть",
+    "save": "Сохранить",
+    "create": "Создать",
+    "name": "Название",
+    "description": "Описание",
+    "confirmDelete": "Вы действительно хотите удалить:",
+    "home": "На главную",
+    "back": "Назад",
+    "select": "Выбрать",
+    "add": "Добавить",
+    "emptyList": "Список пуст",
+    "loadError": "Ошибка загрузки"
+  },
+  "quill": {
+    "collapse": "Скрыть",
+    "expand": "Развернуть",
+    "clear": "Очистить",
+    "placeholder": "Введите текст",
+    "openInNewTab": "Открыть в новой вкладке"
+  },
+  "reports": {
+    "view": {
+      "title": "Просмотр доклада",
+      "authors": "Авторы",
+      "section": "Секция",
+      "annotation": "Аннотация",
+      "additionalMaterials": "Дополнительные материалы",
+      "file": "Файл"
+    },
+    "list": {
+      "empty": "У вас пока нет добавленных докладов.",
+      "emptyHint": "Вы можете добавить новый доклад в разделе «Подача доклада»."
+    },
+    "wrapper": {
+      "title": "Подача доклада для участия в конференции",
+      "intro": "Доклад должен быть представлен на русском и английском языке и включать:",
+      "reqAuthors": "сведения об авторах (фамилия, имя, отчество, учёная степень, название места работы / учёбы, город, страна, email);",
+      "reqTitle": "полное название доклада (не более 7 слов);",
+      "reqAnnotation": "аннотация — 200 слов с обязательным указанием цели доклада;",
+      "reqParticipation": "участие в конференции: очное, дистанционное, заочное (видеозапись доклада).",
+      "submit": "Подать доклад",
+      "saveDraft": "Сохранить как черновик"
+    },
+    "form": {
+      "materials": "Материалы доклада"
+    },
+    "card": {
+      "index": "Доклад №{n}",
+      "deleteTitle": "Удаление доклада",
+      "confirmDelete": "Вы действительно хотите удалить доклад:",
+      "status": {
+        "waiting": "Доклад подан",
+        "published": "Доклад одобрен",
+        "draft": "Черновик",
+        "rejected": "Доклад отклонен"
+      }
+    },
+    "nav": {
+      "myReports": "Мои доклады",
+      "submit": "Подача доклада"
+    }
+  },
+  "home": {
+    "sectionTitle": "Заголовок",
+    "archive": "Архив",
+    "register": "Регистрация",
+    "program_to_pdf":"Программа в PDF"
+  },
+  "fileSelect": {
+    "inputPlaceholder": "Введите ссылку или выберите файл",
+    "modalTitle": "Выбрать файл",
+    "selectedFile": "Выбранный файл",
+    "extension": "Расширение",
+    "empty": "Папка пуста"
+  },
+  "test": {
+    "nav": {
+      "buttons": "Кнопки",
+      "inputs": "Инпуты",
+      "richText": "Ричтекс",
+      "form": "Форма"
+    },
+    "quill": {
+      "titleLabel": "Заголовок ричтекст",
+      "placeholder": "Плейсхолдер"
+    },
+    "buttons": {
+      "colors": "Цвета",
+      "withIcon": "С иконкой",
+      "iconLeft": "Иконка слева",
+      "iconRight": "Иконка справа",
+      "delete": "Удалить",
+      "upload": "Загрузить",
+      "iconOnly": "Только иконка",
+      "text": "Текст",
+      "radius": "Радиус",
+      "customStyles": "Кастомные стили"
+    },
+    "form": {
+      "name": "Тест",
+      "textLabel": "Текст",
+      "enterText": "Введите текст",
+      "fileSelectLabel": "Выбор файла",
+      "fileSelectPlaceholder": "Выберите файл из списка",
+      "passwordLabel": "Пароль",
+      "passwordPlaceholder": "Введите свой пароль",
+      "selectLabel": "Селект",
+      "selectPlaceholder": "Выберите что-то",
+      "multiSelectLabel": "Мульти-селект",
+      "arrayListLabel": "Список массивов 1",
+      "title": "Заголовок",
+      "button": "Кнопка"
+    }
+  },
+  "admin": {
+    "files": {
+      "createFolderBtn": "Создать папку",
+      "uploadFileBtn": "Загрузить файл",
+      "empty": "Папка пуста",
+      "createFolderTitle": "Создание папки",
+      "uploadFileTitle": "Загрузка файла",
+      "editFileTitle": "Редактировать файл",
+      "deleteFileTitle": "Удалить файл",
+      "fileInfoTitle": "Информация о файле",
+      "editFolderTitle": "Редактировать папку",
+      "deleteFolderTitle": "Удалить папку",
+      "folderNameLabel": "Название папки",
+      "folderNamePlaceholder": "Введите название папки",
+      "fileLabel": "Файл",
+      "filePlaceholder": "Выберите файл для загрузки",
+      "fileNameLabel": "Название файла",
+      "fileNamePlaceholder": "Введите название файла",
+      "namePlaceholder": "Введите название",
+      "descriptionPlaceholder": "Введите описание",
+      "replaceFile": "Заменить файл",
+      "selectImage": "Выберите изображение",
+      "selectFile": "Выберите файл (.{ext})",
+      "onlyImage": "Можно загрузить только изображение",
+      "wrongExtension": "Расширение должно быть .{ext}",
+      "extension": "Расширение",
+      "link": "Ссылка",
+      "linkCopied": "Ссылка скопирована",
+      "linkCopiedPopup": "Ссылка скопирована в буфер обмена",
+      "copyLink": "Копировать ссылку",
+      "download": "Скачать"
+    },
+    "pagesData": {
+      "pagesTitle": "Страницы",
+      "selectPagePlaceholder": "Выберите страницу из списка",
+      "saving": "Сохранение...",
+      "saveSuccess": "Данные успешно сохранены",
+      "saveError": "Не удалось сохранить данные"
+    },
+    "users": {
+      "namePlaceholder": "Имя",
+      "emailPlaceholder": "Email",
+      "phonePlaceholder": "Телефон",
+      "planPlaceholder": "Тариф",
+      "planAll": "Все",
+      "empty": "Список пуст",
+      "roleLabel": "Роль",
+      "rolePlaceholder": "Выберите роль",
+      "roles": {
+        "admin": "Админ",
+        "user": "Пользователь",
+        "vereficator": "Валидатор"
+      },
+      "editTitle": "Редактирование пользователя",
+      "deleteTitle": "Удаление пользователя",
+      "confirmDeleteUser": "Вы действительно хотите удалить пользователя:",
+      "deleted": "Пользователь удален",
+      "deleteError": "Не удалось удалить пользователя",
+      "updated": "Пользователь обновлен",
+      "updateError": "Не удалось обновить пользователя"
+    },
+    "reports": {
+      "statusFilter": {
+        "all": "Все",
+        "waiting": "Ожидают",
+        "published": "Одобрены",
+        "draft": "Черновик",
+        "rejected": "Отклонены"
+      },
+      "statusPlaceholder": "Статус доклада",
+      "userNamePlaceholder": "Имя пользователя",
+      "authorNamePlaceholder": "Имя автора",
+      "editTitle": "Редактирование доклада",
+      "approve": "Одобрить",
+      "reject": "Отклонить",
+      "deleteTitle": "Удаление доклада",
+      "confirmDelete": "Вы действительно хотите удалить доклад:",
+      "deleted": "Доклад удален",
+      "deleteError": "Не удалось удалить доклад",
+      "statusUpdated": "Статус доклада обновлен",
+      "statusUpdateError": "Не удалось обновить статус"
+    }
+  },
+  "nav": {
+    "account": "Личный кабинет",
+    "logout": "Выход",
+    "profile": "Профиль",
+    "reports": "Доклады",
+    "admin": "Админка",
+    "pagesData": "Данные страниц",
+    "files": "Файлы",
+    "users": "Пользователи"
+  },
+  "layout": {
+    "authTitle": "авторизация"
+  },
+  "notFound": {
+    "title": "Страница не найдена",
+    "text": "Запрашиваемая страница отсутствует или была перемещена."
+  },
+  "router": {
+    "home": "Главная",
+    "register": "Регистрация"
+  },
+  "errors": {
+    "UNAUTHORIZED": "Сессия истекла, войдите снова",
+    "FORBIDDEN": "Недостаточно прав",
+    "NOT_FOUND": "Не найдено",
+    "CONFLICT": "Запись уже существует",
+    "VALIDATION_ERROR": "Проверьте правильность данных",
+    "ACTION_COOLDOWN": "Повторите попытку через 5 минут",
+    "INTERNAL_ERROR": "Ошибка сервера, попробуйте позже",
+    "NETWORK_ERROR": "Нет связи с сервером",
+    "UNKNOWN_ERROR": "Что-то пошло не так",
+    "login": {
+      "UNAUTHORIZED": "Неверный email или пароль"
+    },
+    "register": {
+      "CONFLICT": "Пользователь с таким email уже существует"
+    },
+    "forgotPassword": {
+      "NOT_FOUND": "Пользователь с таким email не найден"
+    },
+    "resetPassword": {
+      "VALIDATION_ERROR": "Неверно указан код"
+    }
+  }
+}

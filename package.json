@@ -1,0 +1,26 @@
+{
+  "name": "VFC",
+  "private": true,
+  "scripts": {
+    "dev:server:old": "docker compose up --watch server redis",
+    "dev:server": "docker compose up --build --watch server redis",
+    "dev:client:watch": "docker compose up --watch client",
+    "dev:client": "docker compose up client",
+    "dev:all": "docker-compose up",
+
+    "dev:types": "node shared/scripts/index.mjs --watch",
+    "gen:types": "node shared/scripts/index.mjs",
+
+    "build:server": "docker-compose up --build server redis",
+    "build:client": "docker-compose up --build client",
+    "build:all": "docker-compose up --build",
+
+    "dev:rebuild": "docker-compose down -v && docker-compose up --build",
+
+    "prod:build": "docker-compose -f docker-compose.prod.yml build",
+    "prod:up": "docker-compose -f docker-compose.prod.yml up -d",
+    "prod:down": "docker-compose -f docker-compose.prod.yml down",
+
+    "stop": "docker-compose down"
+  }
+}

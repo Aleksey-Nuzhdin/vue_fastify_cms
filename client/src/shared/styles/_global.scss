@@ -1,0 +1,114 @@
+@use 'variables' as *;
+@use 'mixins' as *;
+
+:root {
+  @each $name, $value in $color-map {
+    --color-#{$name}: #{$value};
+  }
+}
+
+.test{
+  width: 100px;
+  height: 100px;
+  background-color: red;
+  border: 5px solid $color-primary;
+  @include desktop{
+    background: green;
+  }
+  @include laptop{
+    background: blue;
+  }
+  @include tablet{
+    background: orange;
+  }
+  @include mobile{
+    background: yellow;
+  }
+  @include mobile-only{
+    background: rgb(255, 0, 255);
+  }
+}
+
+.container{
+  width: 100%;
+  max-width: $breakpoint-xl;
+  margin: 0 auto;
+  padding: 0 $spacing-lg;
+
+  @include desktop{
+    max-width: $breakpoint-lg;
+  }
+
+  @include laptop{
+    max-width: $breakpoint-md;
+  }
+
+  @include tablet{
+    max-width: $breakpoint-sm;
+    max-width: 100%;
+  }
+
+  @include mobile{
+    padding: 0 $spacing-md;
+    max-width: 100%;
+  }
+
+  @include mobile-only{
+    padding: 0 $spacing-sm;
+    max-width: 100%;
+  }
+}
+
+.flex-row{
+  display: flex;
+  flex-direction: row;
+  gap: $spacing-lg;
+  flex-wrap: wrap;
+
+  @include tablet{
+    gap: $spacing-md;
+  }
+}
+.flex-column{
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-lg;
+  flex-wrap: wrap;
+
+  @include tablet{
+    gap: $spacing-md;
+  }
+}
+
+.base-link{
+  color:$color-primary;
+  &:hover{
+    text-decoration: underline;
+    opacity: .7;
+  }
+}
+
+.text-color-error{
+  color: $color-error;
+}
+.base-block{
+  background: $color-white;
+  border-radius: $radius-md;
+  padding: $spacing-xl;
+  @include laptop{
+    padding: $spacing-lg;
+  }
+}
+
+.base-block-md{
+  background: $color-white;
+  border-radius: $radius-md;
+  padding: $spacing-lg;
+}
+
+.dot{
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: $color-black;
+}

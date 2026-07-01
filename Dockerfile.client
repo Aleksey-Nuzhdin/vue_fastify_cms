@@ -1,0 +1,15 @@
+FROM node:22-alpine
+
+WORKDIR /app
+
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+COPY client/package.json client/pnpm-lock.yaml client/pnpm-workspace.yaml ./
+RUN pnpm install
+
+COPY shared /shared
+COPY client .
+
+EXPOSE 5173
+
+CMD ["pnpm", "dev"]

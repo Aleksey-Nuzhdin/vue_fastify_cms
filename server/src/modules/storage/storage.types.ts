@@ -1,0 +1,1 @@
+import type { FileDocument } from "./files/files.types"
