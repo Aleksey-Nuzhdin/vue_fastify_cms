@@ -2,7 +2,7 @@
   "name": "server",
   "version": "1.0.0",
   "type": "module",
-  "packageManager": "pnpm@9.15.9",
+  "packageManager": "pnpm@11.9.0",
   "scripts": {
     "dev": "nodemon",
     "dev:log": "tsx watch src/index.ts | pnpm pino-pretty",
@@ -41,9 +41,6 @@
     "pino": "^10.1.0",
     "sharp": "^0.34.5",
     "zod": "^4.1.13"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": ["bcrypt", "esbuild", "sharp"]
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",

@@ -1,6 +1,7 @@
 {
   "name": "VFC",
   "private": true,
+  "packageManager": "pnpm@11.9.0",
   "scripts": {
     "dev:server:old": "docker compose up --watch server redis",
     "dev:server": "docker compose up --build --watch server redis",
