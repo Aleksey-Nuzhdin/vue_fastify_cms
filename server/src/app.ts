@@ -15,6 +15,7 @@ import redis from './plugins/redis'
 import seeds from './plugins/seeds'
 
 import { routes } from './routes/index'
+import { errorHandler } from './common/errors'
 
 
 export const buildApp = async () => {
@@ -51,6 +52,8 @@ export const buildApp = async () => {
   app.register(fastifyJwt)
   app.register(mongodbPlugin)
   app.register(seeds)
+
+  app.setErrorHandler(errorHandler)
 
   app.register(routes)
 

@@ -1,5 +1,6 @@
-import { FastifyRequest, FastifyReply } from 'fastify'
+import { FastifyRequest } from 'fastify'
 import { ContentService } from './content.service'
+import { notFoundError } from '../../common/errors'
 import type { Lang } from '@shared/types/form'
 import type { PageDataDto } from './content.types'
 
@@ -37,11 +38,9 @@ export function createContentController(service: ContentService) {
       const lang = parseLang(request.query.lang)
       return service.getPageDataByPage(request.params.page, lang)
     },
-    updatePageData: async (request: FastifyRequest<{ Params: { id: string }, Body: PageDataDto }>, reply: FastifyReply) => {
+    updatePageData: async (request: FastifyRequest<{ Params: { id: string }, Body: PageDataDto }>) => {
       const result = await service.updatePageData(request.params.id, request.body)
-      if (!result) {
-        return reply.status(404).send({ message: 'Page not found' })
-      }
+      if (!result) throw notFoundError('Page', request.params.id)
       return result
     },
   }

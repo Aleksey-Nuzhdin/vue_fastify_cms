@@ -26,7 +26,10 @@ export const routes: FastifyPluginAsync = async (app) => {
     if (request.method === 'GET' && !request.url.startsWith('/api/') && !request.url.startsWith('/upload/')) {
       return reply.sendFile('index.html', path.join(process.cwd(), 'public'))
     }
-    return reply.code(404).send({ error: 'Not found' })
+    return reply.code(404).send({
+      success: false,
+      error: { code: 'NOT_FOUND', message: 'Not found' },
+    })
   })
 
 }

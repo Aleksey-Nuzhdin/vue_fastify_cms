@@ -13,6 +13,10 @@
 
 ## 1. Система ошибок написана, но не подключена (cross-cutting, quick win)
 
+> ✅ **Исправлено 2026-07-09**: `app.setErrorHandler(errorHandler)` подключён в
+> `app.ts`; 404-хендлер (`routes/index.ts`) и `content.controller.updatePageData`
+> приведены к единому формату. Ниже — описание проблемы на момент аудита.
+
 - `server/src/common/errors/errors.handler.ts` — `errorHandler` с единым форматом
   `{success:false, error:{code,message}}` **нигде не регистрируется**:
   `setErrorHandler` в проекте не вызывается ни разу (grep пуст).
@@ -168,7 +172,7 @@
 
 | # | Действие | Стоимость |
 |---|----------|-----------|
-| 1 | `app.setErrorHandler(errorHandler)` + сверить контракт с клиентом | ~1 строка + проверка |
+| 1 | ✅ `app.setErrorHandler(errorHandler)` + сверить контракт с клиентом | сделано 2026-07-09 |
 | 2 | Проекция user без `password` в users.repository (или общий `toPublicUser`) | малая |
 | 3 | `await` в `folders.service.delete` + логирование в `files.service.delete` | тривиальная |
 | 4 | Общий `parseMultipart()` хелпер | средняя |
