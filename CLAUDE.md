@@ -73,12 +73,12 @@ client/src/
 │   ├── profile/
 │   │   ├── composables/useProfile.ts
 │   │   └── components/ProfileChangePassword.vue
-│   ├── admin/                # Admin panel (files, content/pages-data, users)
-│   ├── users/
+│   ├── admin/                # Admin panel (files, content/pages-data, reports, users)
+│   ├── users/                # (empty placeholder)
 │   ├── public/pages/Home/    # Public HomePage + demo sections
 │   └── testPage/
-├── shared/                   # Shared components, composables, layouts, utils
-├── stores/                   # Pinia stores
+├── shared/                   # Shared components, composables, layouts, utils, api/fetcher.ts
+├── stores/                   # (empty — all stores live inside modules)
 ├── locales/                  # i18n messages (ru.json, en.json)
 └── router/                   # Vue Router config
 ```
@@ -97,12 +97,14 @@ shared/types/
 
 | Layer     | Technology                                    |
 |-----------|-----------------------------------------------|
-| Frontend  | Vue 3, TypeScript, Vite, Pinia, Vue Router    |
-| Backend   | Fastify 5, TypeScript, Pino (logging)         |
-| Database  | MongoDB (native driver + mongoose)            |
-| Cache     | Redis (token/session storage)                 |
+| Frontend  | Vue 3, TypeScript, Vite, Pinia, Vue Router, @tanstack/vue-query (server state), vue-dompurify-html |
+| Backend   | Fastify 5, TypeScript, Pino (logging), sharp (image resize) |
+| Database  | MongoDB (native driver; external service — not in docker-compose) |
+| Cache     | Redis (token/session storage; docker network only) |
 | Auth      | JWT (access + refresh tokens), bcrypt         |
-| Validation| Zod                                           |
+| Validation| manual checks in services (Zod planned, not used yet) |
+
+**No tests** (client has vitest configured but zero test files; none planned short-term).
 
 ## Auth System
 
@@ -122,10 +124,19 @@ POST   /api/auth/refresh
 POST   /api/auth/logout           [auth required]
 POST   /api/auth/logoutAll        [auth required]
 PATCH  /api/auth/change-password  [auth required]
+GET    /api/auth/check-email/:email          # is email free for registration
+POST   /api/auth/forgot-password
+POST   /api/auth/reset-password-code
+GET    /api/auth/get-code/:email  [admin]    # admin helper to reset a user's password
 
-GET    /api/profile/me          [auth required]
+GET    /api/profile/me            [auth required]
 
-GET    /api/users                 [admin]
+GET    /api/users/all             [admin]
+POST   /api/users/create          [admin]
+PATCH  /api/users/update/:id      [admin]
+DELETE /api/users/delete/:id      [admin]
+GET    /api/users/item/:id        [vereficator+admin]
+GET    /api/users/list            [vereficator+admin]
 ...    /api/storage/...             # files & folders
 ...    /api/content/...             # page content & reference lists
 ...    /api/reports/...             # user-generated content
@@ -139,26 +150,33 @@ See `.env.example` in the repo root for the full template.
 
 ```
 JWT_SECRET, COOKIE_SECRET          # required — fail-fast on start if missing
-MONGO_DB_CONNECT=mongodb://localhost:27017/
+MONGO_DB_CONNECT=mongodb://localhost:27017/   # MongoDB is external (container or remote server)
 MONGO_DB_NAME=test
-SERVER_PORT=3001
-CLIENT_PORT=3002
-REDIS_PORT=3003
-PRODACTION_PORT=3004
+SERVER_PORT=3001                   # docker-compose port mapping only — the app always listens on 3000
+CLIENT_PORT=3002                   # docker-compose port mapping only
+REDIS_PORT=3003                    # docker-compose port mapping only
+PRODACTION_PORT=3004               # docker-compose.prod.yml port mapping
 UPDATE_PAGES_DATA=false            # true → reseed content on start
 MAILER_IS_ACTIVE, MAILER_HOST, MAILER_PORT, MAILER_FROM   # Nodemailer (SMTP)
 ```
 
+`REDIS_URL` is required by the server but is intentionally NOT in `.env` — it is
+hardcoded in docker-compose (`redis://redis:6379`): Redis lives only inside the
+docker network and is reachable only by the server.
+
 ## Commands
+
+**The project runs in Docker only.** Dev = `docker compose up` (server, client,
+redis; MongoDB is external). Prod = `docker-compose.prod.yml` (single `app`
+container + redis). Running `pnpm run dev` outside docker will fail on startup
+without `REDIS_URL`.
 
 **Package manager**: pnpm (not npm)
 
 ```bash
-# Server
-cd server && pnpm run dev        # Development
-cd server && pnpm run build      # Build
+docker compose up                # Development (server + client + redis)
 
-# Client
-cd client && pnpm run dev        # Development
-cd client && pnpm run build      # Build
+# Inside the containers / for builds:
+cd server && pnpm run build      # Build (tsup + build-seeds.mjs)
+cd client && pnpm run build      # Build (type-check + vite build)
 ```
