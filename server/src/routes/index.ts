@@ -31,21 +31,4 @@ export const routes: FastifyPluginAsync = async (app) => {
       error: { code: 'NOT_FOUND', message: 'Not found' },
     })
   })
-
 }
-// app.get('/health/redis', async (request, reply) => {
-//   try {
-//     const ping = await app.redis.ping()
-    
-//     return { 
-//       status: 'ok', 
-//       redis: ping === 'PONG' ? 'connected' : 'error' 
-//     }
-//   } catch (error) {
-//     return reply.code(503).send({ 
-//       status: 'error', 
-//       redis: 'disconnected',
-//       message: (error as Error).message 
-//     })
-//   }
-// })
