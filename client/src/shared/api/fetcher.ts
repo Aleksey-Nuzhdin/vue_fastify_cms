@@ -1,5 +1,5 @@
 import { tokenStorage } from '../lib/token.storage'
-import { createFetcherError, type FetcherError } from './fetcher.error'
+import { createFetcherError } from './fetcher.error'
 import type { ApiErrorResponse, RefreshResponse } from '@shared/types'
 
 const BASE_URL = import.meta.env.VITE_API_URL || '/api'

@@ -37,7 +37,7 @@ export function useAdminFileMutations() {
     }
 
     try {
-      let resultCreate = await api.createFile(formData)
+      const resultCreate = await api.createFile(formData)
       queryClient.setQueryData(
         ['admin-files', currentFolderId.value],
         (oldData: any) => oldData ? [...oldData, resultCreate] : [resultCreate],

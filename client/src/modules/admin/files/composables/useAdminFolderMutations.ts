@@ -19,7 +19,7 @@ export function useAdminFolderMutations() {
     }
 
     try {
-      let resultCreate = await api.createFolder(dataCreate)
+      const resultCreate = await api.createFolder(dataCreate)
       queryClient.setQueryData(
         ['admin-folders', currentFolderId.value],
         (oldData: any) => oldData ? [...oldData, resultCreate] : [resultCreate],

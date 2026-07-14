@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "nodemon",
     "dev:log": "tsx watch src/index.ts | pnpm pino-pretty",
+    "typecheck": "tsc --noEmit",
     "build": "tsup && node build-seeds.mjs",
     "lint": "eslint src/",
     "lint:fix": "eslint src/ --fix",

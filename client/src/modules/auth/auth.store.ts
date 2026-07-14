@@ -2,7 +2,7 @@ import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import { tokenStorage } from '@/shared/lib'
 import { authApi } from './auth.api'
-import type { AuthUser, LoginRequest, RegistrationDto, ProfileResponse, UserRole } from './auth.types'
+import type { AuthUser, LoginRequest, RegistrationDto, UserRole } from './auth.types'
 import { USER_ROLES } from '@shared/constants'
 
 // Ключи, у которых значение — РОВНО string (литеральные union вроде role

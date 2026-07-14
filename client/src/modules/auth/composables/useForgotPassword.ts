@@ -1,8 +1,6 @@
-import { ref, computed } from 'vue'
 import { authApi } from '../auth.api'
-import type { AuthUser, LoginRequest, RequestSetPasswordWithCode } from '../auth.types'
+import type {RequestSetPasswordWithCode } from '../auth.types'
 import { isFetcherError } from '@/shared/api'
-import { useShowPopup } from '@/shared/components/Popup/useShowPopup'
 
 export function useForgotPassword(){
 

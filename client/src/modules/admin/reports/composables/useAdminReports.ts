@@ -1,13 +1,11 @@
 import { computed, ref, watch } from 'vue'
-import { useQueryClient, useQuery } from '@tanstack/vue-query'
-import { isFetcherError } from '@/shared/api/fetcher.error'
+import { useQuery } from '@tanstack/vue-query'
 import { usePagination } from '@/shared/composables/usePagination'
 import { adminReportsApi as api } from '../admin.reports.api'
 import type { GetReportsQuery } from '../admin.reports.type'
 
 export function useAdminReports(filter?: GetReportsQuery) {
   const chankSize = 6
-  // const queryClient = useQueryClient()
   const pagination = usePagination(chankSize)
 
   const setPage = (page: number) => {

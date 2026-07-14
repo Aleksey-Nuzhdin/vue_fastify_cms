@@ -19,7 +19,7 @@ const dialog = ref<HTMLDialogElement | null>(null)
 
 modal.setNode(dialog)
 
-let closeModal = () => {
+const closeModal = () => {
   emits('close', props.id)
   modal.closeModal()
 }

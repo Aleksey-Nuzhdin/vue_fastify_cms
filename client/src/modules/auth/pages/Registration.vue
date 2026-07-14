@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watchEffect, watch } from 'vue'
 import type { Register } from '../auth.types'
-// import { usePageBandle } from '@/shared/composables/content/usePageBundle'
 import { useAuthStore } from '../auth.store'
 import { useRouter } from 'vue-router'
 import { useShowPopup } from '@/shared/components/Popup/useShowPopup'
@@ -13,8 +12,6 @@ import { authApi } from '../auth.api'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
-
-// const { page, config } = usePageBandle<Register.PageData, Register.InitionalValues>('page-register')
 
 const page = usePageData<Register.PageData>('page-register')
 const config = useConfigData<Register.InitionalValues>('register')
@@ -161,7 +158,7 @@ const hendleFormNextStep = () => {
 
 const hendleFormBeforeStep = () => {
   step.value--
-  step.value < 0 && (step.value = 0)
+  if( step.value < 0 ) step.value = 0
 }
 
 const pageData = computed(() => page.pageData.value?.data || null)

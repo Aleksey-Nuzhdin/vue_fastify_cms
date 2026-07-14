@@ -1,6 +1,5 @@
 import { computed, ref, watch } from 'vue'
 import { useQueryClient, useQuery } from '@tanstack/vue-query'
-import { isFetcherError } from '@/shared/api/fetcher.error'
 import { usePagination } from '@/shared/composables/usePagination'
 import { adminUsersApi as api } from '../admin.users.api'
 import type { GetUsersQuery } from '../admin.users.type'
