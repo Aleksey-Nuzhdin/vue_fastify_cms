@@ -6,11 +6,12 @@ import {
   internalError 
 } from '../../common/errors'
 import { UsersRepository } from '../users/users.repository'
-import type { UpdateProfileDto, ProfileResponse, UpdateProfileResponse } from './profile.types'
+import type { UpdateProfileDto, ProfileResponse, UpdateProfileResponse} from './profile.types'
 import { fsStorageService } from 'src/services/fsStorage.service'
 import type { MultipartFile } from '@fastify/multipart'
 
 import { buildUpdate } from '../../common/utils/buildUpdate'
+import { toPublicUser } from '../users/users.service'
 
 export function createProfileService(repository: UsersRepository) {
   const fsStorage = fsStorageService()
@@ -54,7 +55,7 @@ export function createProfileService(repository: UsersRepository) {
       if( !updatedUser ) throw conflictError('User not updated')
       
       // TODO: Новый токен?
-      return {...updatedUser, _id:updatedUser._id.toString()}
+      return toPublicUser(updatedUser)
     },
 
     async uploadAvatar(userId: string, file: MultipartFile | undefined) {

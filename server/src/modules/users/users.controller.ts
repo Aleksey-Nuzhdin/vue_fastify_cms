@@ -17,7 +17,7 @@ export function createUsersController(service: UsersService) {
     },
 
     getList: async (request: FastifyRequest<{ Querystring: GetUsersQuery }>) => {
-      return service.findList(request.query, request.user)
+      return service.findList(request.query)
     },
 
     create: async (request: FastifyRequest<{ Body: CreateUserDto }>, reply: FastifyReply) => {

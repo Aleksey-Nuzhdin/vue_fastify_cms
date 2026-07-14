@@ -38,6 +38,6 @@ export type GetUsersQuery = Partial<{
 export type ReturnUser<T = string> = Omit<UserBase<T>, 'password'>
 
 export type ReturnUserList<T> = {
-  list: ReturnUser<T>[],
+  list: T[],
   count: number
 }

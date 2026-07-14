@@ -10,7 +10,7 @@ services:
     volumes:
       - uploads_data:/app/public/upload
     env_file:
-      - .env.production
+      - .env
     environment:
       - NODE_ENV=production
       - REDIS_URL=redis://redis:6379

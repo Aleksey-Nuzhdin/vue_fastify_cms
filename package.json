@@ -12,6 +12,8 @@
     "dev:types": "node shared/scripts/index.mjs --watch",
     "gen:types": "node shared/scripts/index.mjs",
 
+    "gen:secrets": "node scripts/gen-secrets.mjs",
+
     "build:server": "docker-compose up --build server redis",
     "build:client": "docker-compose up --build client",
     "build:all": "docker-compose up --build",

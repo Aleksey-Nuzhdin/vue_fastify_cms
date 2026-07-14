@@ -4,7 +4,7 @@ import type { ReturnUser, ReturnUserList, GetUsersQuery, UpdateUserDto} from './
 export const adminUsersApi = {
   fetchUserItem: (id: string):Promise<ReturnUser<string>> =>
     fetcher.get('/users/item/' + id),
-  fetchUsersList: (query: GetUsersQuery) : Promise<ReturnUserList<string>> =>
+  fetchUsersList: (query: GetUsersQuery) : Promise<ReturnUserList<ReturnUser>> =>
     fetcher.get('/users/list', {query}),
   createUser: (formData: FormData):Promise<ReturnUser<string>> =>
     fetcher.post('/users/create', formData),

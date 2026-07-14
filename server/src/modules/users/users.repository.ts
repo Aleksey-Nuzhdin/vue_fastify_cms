@@ -43,7 +43,8 @@ export function createUsersRepository(db: Db) {
           }
       }])
 
-      return collection.aggregate<ReturnUserList<ObjectId>>(aggregation).toArray()
+      type AggregationUser = Omit<WithId<UserDocument>, 'password' | 'createdAt' | 'updatedAt'>
+      return collection.aggregate<ReturnUserList<AggregationUser>>(aggregation).toArray()
     },
 
     create: async (data: CreateUserData) => {

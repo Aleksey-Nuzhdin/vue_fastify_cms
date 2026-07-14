@@ -1,6 +1,6 @@
 import { unauthorizedError, conflictError, cooldownError, notFoundError, validationError, internalError } from '../../common/errors'
 import { PayloadAccess, PayloadRefresh, RegistrationDto } from './auth.types'
-import { User, CreateUserData, UserDocument } from '../users/users.types'
+import { User, CreateUserData, UserDocument, ReturnUser } from '../users/users.types'
 import type { ObjectId } from 'mongodb'
 import { UsersRepository } from '../users/users.repository'
 import { JWT, SignOptions } from '@fastify/jwt'
@@ -11,13 +11,10 @@ import { mailer } from 'src/services/mailer/mailer'
 import type { TemplateData, DataMailer } from 'src/services/mailer/mailer.type'
 import { buildUpdate } from '../../common/utils/buildUpdate'
 
+
 import authConfig from '../../configs/auth.config'
 
 type AuthUserFromToken = PayloadAccess | PayloadRefresh
-
-// // Префикс для ключей в Redis
-// const REFRESH_TOKEN_PREFIX = authConfig.refreshTokenPrfix
-// const USER_TOKENS_PREFIX = authConfig.userTokenPrefix
 
 type changePassword = {userId:string, oldPassword:string, newPassword:string, refreshToken:string}
 

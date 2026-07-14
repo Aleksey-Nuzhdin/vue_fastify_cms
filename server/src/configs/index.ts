@@ -4,10 +4,26 @@ import path from 'path'
 
 // Критичные секреты. Без них сервер не должен стартовать — никаких
 // захардкоженных фоллбэков (это болванка под форки).
-const REQUIRED_SECRETS = ['JWT_SECRET', 'COOKIE_SECRET'] as const
+const REQUIRED_SECRETS = [
+  "JWT_SECRET", 
+  "COOKIE_SECRET", 
+  "MONGO_DB_CONNECT", 
+  "MONGO_DB_NAME", 
+  "SERVER_PORT", 
+  "CLIENT_PORT", 
+  "REDIS_PORT", 
+  "PRODACTION_PORT", 
+  "UPDATE_PAGES_DATA", 
+  "MAILER_IS_ACTIVE", 
+  "MAILER_HOST", 
+  "MAILER_PORT", 
+  "MAILER_FROM",
+] as const
 const REQUIRED_WEAK_SECRETS = ['JWT_SECRET', 'COOKIE_SECRET'] as const
 
-const HEX_SECRET = /^[0-9a-f]{32}$/i //-hex 16
+ 
+
+const HEX_SECRET = /^[0-9a-f]{64}$/i //-hex 32
 
 const isWeakSecret = (val: string): boolean => {
   if (!(HEX_SECRET.test(val))) return true                   // hex
