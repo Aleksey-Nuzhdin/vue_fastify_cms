@@ -17,7 +17,6 @@ const getAttachments = () => {
   return []
 }
 
-
 export async function mailer(data: DataMailer, templateData: TemplateData) {
   const template = getTemplate(templateData)
   const attachments = getAttachments()
@@ -36,14 +35,18 @@ export async function mailer(data: DataMailer, templateData: TemplateData) {
   // Позволяет вызывать mailer() из роутов (регистрация, восстановление пароля)
   // без настроенного SMTP-сервера. Дефолт болванки — выключено.
   if( process.env.MAILER_IS_ACTIVE !== 'true' ){
-    console.log('[mailer] MAILER_IS_ACTIVE != true — письмо не отправлено, дамп:', dataTransporter)
+    if( process.env.NODE_ENV === 'development' ){
+      console.log('[mailer] MAILER_IS_ACTIVE != true — письмо не отправлено, дамп:', dataTransporter)
+    }
     return 'stubbed'
   }
 
   // Реальная отправка: нужна полная SMTP-конфигурация.
-  if( !process.env.MAILER_FROM || !process.env.MAILER_HOST || !process.env.MAILER_PORT ){
-    throw new Error('MAILER_FROM, MAILER_HOST, MAILER_PORT is required')
-  }
+  // !process.env.MAILER_FROM || !process.env.MAILER_HOST || !process.env.MAILER_PORT
+  // Проверяется наличие в /configs/index.ts
+  // if( !process.env.MAILER_FROM || !process.env.MAILER_HOST || !process.env.MAILER_PORT ){
+  //   throw new Error('MAILER_FROM, MAILER_HOST, MAILER_PORT is required')
+  // }
 
   return mailerTransporter(dataTransporter);
 }
