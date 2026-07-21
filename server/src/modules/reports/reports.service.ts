@@ -18,6 +18,8 @@ import type {
 
 import type { PayloadAccess } from '../auth/auth.types'
 
+const MAX_LIMIT = 100
+
 export function createReportsService(repo: ReportsRepository) {
   const fsStorage = fsStorageService()
 
@@ -32,15 +34,16 @@ export function createReportsService(repo: ReportsRepository) {
 
     
     findList: async (params: GetReportsQuery, performedBy: PayloadAccess)
-    :Promise<ResponseReportList<ObjectId>> => {
+      :Promise<ResponseReportList<ObjectId>> => 
+    {
       const {skip, limit, title, authorName, authorEmail, userEmail, userId, userName, status} = params
       
       // if( userId !== undefined && performedBy.role !== 'admin' ){
       //   throw validationError('User id is not valid')
       // }
       const findQuery: GetReportsQuery = {
-        skip: skip || 0,
-        limit: limit || 10,
+        skip: Number(skip) > 0 ? Number(skip) : 0,
+        limit: Number(limit) > 0 ? Math.min(Number(limit), MAX_LIMIT) : 10,
         title: title || undefined,
         authorName: authorName || undefined,
         authorEmail: authorEmail || undefined,
@@ -49,8 +52,10 @@ export function createReportsService(repo: ReportsRepository) {
         userId: userId || undefined,
         status: status || undefined
       }
-      if( userId === undefined && performedBy.role !== 'admin' ){ 
-        findQuery.userId  = performedBy._id
+
+      //Если admin, то можно просматривать все отчеты
+      if( !['admin', 'vereficator'].includes(performedBy.role) ){ 
+        findQuery.userId = performedBy._id
       }
       
       const list = await repo.findList(findQuery)
