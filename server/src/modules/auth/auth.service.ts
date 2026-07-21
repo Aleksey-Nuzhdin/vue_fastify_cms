@@ -1,16 +1,15 @@
 import { unauthorizedError, conflictError, cooldownError, notFoundError, validationError, internalError } from '../../common/errors'
 import { PayloadAccess, PayloadRefresh, RegistrationDto } from './auth.types'
-import { User, CreateUserData, UserDocument, ReturnUser } from '../users/users.types'
+import { CreateUserData, UserDocument } from '../users/users.types'
 import type { ObjectId } from 'mongodb'
 import { UsersRepository } from '../users/users.repository'
 import { JWT, SignOptions } from '@fastify/jwt'
 import { FastifyRedis } from '@fastify/redis'
 import bcrypt from 'bcrypt'
-import { randomUUID } from 'crypto' 
+import { randomUUID, randomInt } from 'crypto' 
 import { mailer } from 'src/services/mailer/mailer'
 import type { TemplateData, DataMailer } from 'src/services/mailer/mailer.type'
-import { buildUpdate } from '../../common/utils/buildUpdate'
-
+// import { buildUpdate } from '../../common/utils/buildUpdate'
 
 import authConfig from '../../configs/auth.config'
 
@@ -25,14 +24,19 @@ export function createAuthService( jwt:JWT, redis:FastifyRedis, usersRepository:
       return redis.get('forgotPassword:'+email)
     },
     async forgotPassword(email:string){
+      //Если код есть, значить письмо уже было отправленно
+      //лок 5 мин, на повторную отправку
       const code = await redis.get('forgotPassword:'+email);
       if( code ) throw cooldownError()
 
       const user = await usersRepository.findByEmail(email)
       if( !user ) throw notFoundError('User', email)
       
-      const codeStr = Math.floor(100000 + Math.random() * 900000)
-      await redis.setex('forgotPassword:'+email, 300, codeStr) // 5 минут      
+      const codeStr = randomInt(10 ** 5, 10 ** 6)
+      // const codeStr = Math.floor(100000 + Math.random() * 900000)
+      await redis.setex('forgotPassword:'+email, 300, codeStr) // 5 минут
+      // счётчик попыток   
+      await redis.setex('forgotPassword_counter:'+email, 300, 0) // 5 минут      
 
       const dataMailer:DataMailer = {email, subject:'Forgot password', text:`Code: ${codeStr}`}
       const template:TemplateData = {type:'forgotPassword', code:codeStr}
@@ -45,8 +49,19 @@ export function createAuthService( jwt:JWT, redis:FastifyRedis, usersRepository:
       }
     },
     async resetPasswordWithCode({email, code, newPassword}:{email:string, code:string, newPassword:string}){
+      if( !(Number(code) >= 10 ** 5 && Number(code) < 10 ** 6) ) throw validationError('Invalid code')
+
       const codeStr = await redis.get('forgotPassword:'+email)
-      if( codeStr !== code ) throw validationError('Invalid code')
+      if( !codeStr ) throw validationError('Invalid code')
+
+      //Считаем количество попыток
+      const codeCounter = await redis.get('forgotPassword_counter:'+email)
+      if( Number(codeCounter) >= 5) throw cooldownError()
+
+      if( codeStr !== code ){
+        await redis.incr('forgotPassword_counter:' + email)
+        throw validationError('Invalid code')
+      }
 
       const user = await usersRepository.findByEmail(email)
       if( !user ) throw notFoundError('User', email)
@@ -56,6 +71,7 @@ export function createAuthService( jwt:JWT, redis:FastifyRedis, usersRepository:
       if( !updatedUser ) throw conflictError('User not updated')
 
       redis.del('forgotPassword:'+email)
+      redis.del('forgotPassword_counter:'+email)
 
       await this.logoutAll( user._id.toString() )
 
