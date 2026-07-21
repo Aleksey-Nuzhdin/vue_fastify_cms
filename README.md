@@ -35,15 +35,20 @@
 Требуется установленный Docker. Пакетный менеджер внутри — **pnpm**.
 
 ```bash
-# 1. Скопировать переменные окружения и заполнить секреты
+# 1. Скопировать шаблон переменных окружения
 cp .env.example .env
 
-# 2. Сгенерировать общие типы из shared/
+# 2. Сгенерировать стойкие секреты (JWT_SECRET / COOKIE_SECRET) прямо в .env
+pnpm gen:secrets
+
+# 3. Сгенерировать общие типы из shared/
 pnpm run gen:types        # или pnpm run dev:types — в watch-режиме
 
-# 3. Поднять весь стек (server + client + redis)
+# 4. Поднять весь стек (server + client + redis)
 pnpm run dev:all
 ```
+
+> **Секреты обязательны.** `.env.example` содержит только плейсхолдеры — они не пройдут проверку стойкости. Шаг 2 генерирует настоящие значения (`openssl rand -hex 32` → 64 hex-символа). В prod (`NODE_ENV=production`) сервер **упадёт на старте**, если `JWT_SECRET`/`COOKIE_SECRET` слабые или не заданы. Прод использует тот же `.env` — сгенерируйте его на прод-машине.
 
 По умолчанию (см. `.env.example`):
 - client → http://localhost:3002
@@ -59,6 +64,7 @@ pnpm run dev:all
 | `pnpm dev:all`        | Поднять весь dev-стек                             |
 | `pnpm dev:server`     | Только server + redis (с --build и watch)         |
 | `pnpm dev:client`     | Только client                                     |
+| `pnpm gen:secrets`    | Сгенерировать стойкие hex-секреты в `.env` (`--force` — перегенерить) |
 | `pnpm gen:types`      | Сгенерировать типы из `shared/`                   |
 | `pnpm dev:types`      | Генерация типов в watch-режиме                    |
 | `pnpm dev:rebuild`    | Полный пересбор (down -v + up --build)            |
@@ -77,7 +83,7 @@ cd client && pnpm install && pnpm run dev    # vite
 Все переменные — в `.env` в корне (шаблон — `.env.example`).
 
 ```
-JWT_SECRET, COOKIE_SECRET          # секреты (fail-fast при отсутствии)
+JWT_SECRET, COOKIE_SECRET          # секреты, 64 hex-символа; fail-fast если нет/слабый (см. pnpm gen:secrets)
 MONGO_DB_CONNECT, MONGO_DB_NAME    # MongoDB
 SERVER_PORT, CLIENT_PORT, REDIS_PORT, PRODACTION_PORT
 UPDATE_PAGES_DATA                  # true → пересевать контент при старте
