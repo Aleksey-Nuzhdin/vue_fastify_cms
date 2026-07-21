@@ -6,19 +6,23 @@ import { UserRole } from './../../modules/users/users.types'
 export function authRoleGuard(roles?: UserRole[]) {
   return async function (request: FastifyRequest) {
     try {
-      await request.jwtVerify()
+      await request.jwtVerify()      
     } catch {
       throw unauthorizedError('JWT invalid or missing')
     }
 
     const user = request.user
-    
+
     // Проверяем что это access токен, а не refresh
     if (user.type !== 'access') throw unauthorizedError('Invalid token')
 
     // если что-то поменяли в sign()
-    if (!user._id || !user.email || !user.role) throw unauthorizedError('Invalid token')
+    if (!user._id || !user.email || !user.role || !user.uuid) throw unauthorizedError('Invalid token')
 
+    // Отзыв: нет ключа в Redis → токен отозван (logout / logoutAll / смена пароля)
+    const key = `user:${user._id}:token:access:${user.uuid}`
+    if (!(await request.server.redis.exists(key))) throw unauthorizedError('Invalid token')
+    
     // Если роли не указаны — просто авторизация
     if (!roles || roles.length === 0) return
     
