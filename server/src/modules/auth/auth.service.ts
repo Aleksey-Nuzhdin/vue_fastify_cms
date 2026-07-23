@@ -155,7 +155,7 @@ export function createAuthService( jwt:JWT, redis:FastifyRedis, usersRepository:
       await redis.setex(
         `user:${user._id}:token:refresh:${refreshUuid}`, 
         authConfig.refreshTtlSeconds, 
-        refreshToken
+        ''
       )
 
       return { accessToken, refreshToken, remember }
@@ -181,12 +181,12 @@ export function createAuthService( jwt:JWT, redis:FastifyRedis, usersRepository:
       // Проверяем что только _id (это refresh, не access)
       if( payload.type !== 'refresh' ) throw unauthorizedError('Invalid token')
       
+      // const tokenFromRedis = await redis.get(`user:${payload._id}:token:refresh:${payload.uuid}`)
+        
       // Проверяем что токен есть в Redis (не отозван)
-      const tokenFromRedis = await redis.get(`user:${payload._id}:token:refresh:${payload.uuid}`)
-      
-      // const exists = await redis.exists(`user:${payload._id}:token:refresh:${payload.uuid}`)
+      const exists = await redis.exists(`user:${payload._id}:token:refresh:${payload.uuid}`)
 
-      if (!tokenFromRedis){
+      if ( exists === 0 ) {
         //TD
         //Если инспектируется невалидный токен, подозреваем взлом
         //И отзываем все токены юзера
@@ -199,11 +199,9 @@ export function createAuthService( jwt:JWT, redis:FastifyRedis, usersRepository:
       const user = await usersRepository.findById(payload._id)
       if (!user) throw unauthorizedError('User not found')
 
-      let payloadOld:PayloadRefresh = jwt.verify(tokenFromRedis)
-
       await redis.del(`user:${payload._id}:token:refresh:${payload.uuid}`)
 
-      return this.getAccessAndRefreshTokens(user, payloadOld.remember)
+      return this.getAccessAndRefreshTokens(user, payload.remember)
     },
 
     async logout(refreshToken: string, accessToken: string) {

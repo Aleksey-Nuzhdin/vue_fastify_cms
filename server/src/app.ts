@@ -31,7 +31,7 @@ export const buildApp = async () => {
   app.register(helmet, {
     contentSecurityPolicy: false,
   })
-  app.register(rateLimit)
+  app.register(rateLimit, { max: 500, timeWindow: '1 minute' })
   app.register(multipart, { 
     // attachFieldsToBody: true,
     limits: { fileSize: 100 * 1024 * 1024 } // 100MB
