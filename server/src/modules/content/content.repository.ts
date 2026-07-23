@@ -10,9 +10,9 @@ export function createContentRepository(db: Db) {
   const collectionConfigs: Collection<FormConfigMongoDB> = db.collection('formConfigs')
 
   return {
-    getPageDataList: (query: { showHidden?: boolean; lang: Lang }) => {
+    getPageDataList: (query: { lang: Lang }) => {
       const filter: any = { lang: query.lang }
-      if (!query.showHidden) filter.hide = { $ne: true }
+      filter.hide = { $ne: true } // showHidden убран как admin-only параметр (SEC-9) — при необходимости вернуть см. историю
       return collectionPages.find(filter).toArray()
     },
     getPageDataById: (id: string, lang: Lang) => collectionPages.findOne({ id, lang }),

@@ -4,7 +4,7 @@ import type { PageDataDto } from "./content.types"
 
 export function createContentService(repo: ContentRepository) {
   return {
-    getPageDataList: (query: { showHidden?: boolean; lang: Lang }) => repo.getPageDataList(query),
+    getPageDataList: (query: { lang: Lang }) => repo.getPageDataList(query),
     getPageDataById: (id: string, lang: Lang) => repo.getPageDataById(id, lang),
     getPageDataByPage: (page: string, lang: Lang) => repo.getPageDataByPage(page, lang),
     getFormConfigList: (lang: Lang, page?: boolean) => repo.getConfigList(lang, page),

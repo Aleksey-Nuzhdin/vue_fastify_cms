@@ -15,9 +15,9 @@ function parseLang(raw?: string): Lang {
 
 export function createContentController(service: ContentService) {
   return {
-    getPageDataList: (request: FastifyRequest<{ Querystring: { showHidden?: string } & LangQuery }>) => {
+    getPageDataList: (request: FastifyRequest<{ Querystring: LangQuery }>) => {
       const lang = parseLang(request.query.lang)
-      return service.getPageDataList({ showHidden: request.query.showHidden === 'true', lang })
+      return service.getPageDataList({ lang })
     },
     getFormConfigList: (request: FastifyRequest<{ Querystring: LangQuery & { page?: string } }>) => {
       const lang = parseLang(request.query.lang)
