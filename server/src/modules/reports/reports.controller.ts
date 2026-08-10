@@ -1,6 +1,7 @@
 import { FastifyRequest, FastifyReply } from 'fastify'
 import { ReportsService } from './reports.service'
 import { Readable } from 'stream'
+import { validationError } from '../../common/errors'
 
 import type { 
   CreateReportDto,
@@ -17,22 +18,27 @@ interface IdParam {
 
 const parseAuthors = (authorsString: string):ReportAuthor[] => {
   const authors:ReportAuthor[] = [] 
+  let authorsJson: unknown
+
   try {
-    const authorsJson = JSON.parse(authorsString)
-    if(Array.isArray(authorsJson)){
-      authorsJson.forEach((author:ReportAuthor) => {
-        const { name, email, organization, city, position, participation } = author
-        authors.push({ 
-          name: name || '', 
-          email: email || '', 
-          organization: organization || '', 
-          city:city || '',
-          position:position || '',
-          participation:participation || '',
-        })
-      })
-    }
-  }catch{}
+    authorsJson = JSON.parse(authorsString)
+  } catch {
+    throw validationError('Authors must be a valid JSON array')
+  }
+
+  if (!Array.isArray(authorsJson)) throw validationError('Authors must be an array')
+    
+  authorsJson.forEach((author:ReportAuthor) => {
+    const { name, email, organization, city, position, participation } = author
+    authors.push({ 
+      name: name || '', 
+      email: email || '', 
+      organization: organization || '', 
+      city:city || '',
+      position:position || '',
+      participation:participation || '',
+    })
+  })
   
   return authors
 }

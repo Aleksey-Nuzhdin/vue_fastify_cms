@@ -76,12 +76,10 @@ export function createProfileService(repository: UsersRepository) {
 
       // Обновление пользователя
       const dataUpdate = { avatar: `${folderPath}/original.webp` }
-      try {
-        await repository.update(user._id.toString(), dataUpdate)
-        return dataUpdate.avatar
-      } catch (error) {
-        throw conflictError('User not updated')
-      }
+      
+      const updatedUser = await repository.update(user._id.toString(), dataUpdate)
+      if (!updatedUser) throw conflictError('User not updated')
+      return dataUpdate.avatar
     },
   }
 }

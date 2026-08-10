@@ -2,7 +2,7 @@ import { FoldersRepository } from '../folders/folders.repository'
 import { FilesRepository } from './files.repository'
 import { parseFileName, sanitizeFileName } from '../../../common/utils/files.utils'
 
-import { notFoundError, conflictError, validationError, internalError } from '../../../common/errors'
+import { notFoundError, conflictError, validationError } from '../../../common/errors'
 // import { ObjectId } from 'mongodb'
 import { fsStorageService } from '../../../services/fsStorage.service'
 
@@ -108,12 +108,8 @@ export function createFilesService(filesRepo: FilesRepository, foldersRepo:Folde
       const file = await filesRepo.findById(id)
       if(!file) throw notFoundError('File', id)
 
-      try {
-        await storage.deleteFile(file.fullPath)
-        await filesRepo.delete(id)
-      } catch (error) {
-        throw internalError()
-      }
+      await storage.deleteFile(file.fullPath)
+      await filesRepo.delete(id)
 
       return file
     },

@@ -35,7 +35,8 @@ export function createFoldersService(repo: FoldersRepository, filesRepo: FilesRe
         throw validationError('Folder is not empty')
       }
 
-      repo.delete(id)
+      const result = await repo.delete(id)
+      if (result.deletedCount === 0) throw conflictError('Folder cannot be deleted')
 
       return deletedFolder
     },

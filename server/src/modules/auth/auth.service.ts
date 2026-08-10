@@ -68,8 +68,7 @@ export function createAuthService( jwt:JWT, redis:FastifyRedis, usersRepository:
       const updatedUser = await usersRepository.update(user._id.toString(), {password:hashPassword})
       if( !updatedUser ) throw conflictError('User not updated')
 
-      redis.del('forgotPassword:'+email)
-      redis.del('forgotPassword_counter:'+email)
+      await redis.del('forgotPassword:'+email, 'forgotPassword_counter:'+email)
 
       await this.logoutAll( user._id.toString() )
 
