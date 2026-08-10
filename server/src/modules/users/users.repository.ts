@@ -1,6 +1,7 @@
-import { ObjectId, Db, Collection, Document, WithId } from 'mongodb'
+import { Db, Collection, Document, WithId } from 'mongodb'
 
-import type { GetUsersQuery, UserDocument, CreateUserData, UpdateUserDto, ReturnUser, ReturnUserList} from './users.types'
+import type { GetUsersQuery, UserDocument, CreateUserData, UpdateUserDto, ReturnUserList} from './users.types'
+import { toObjectId } from '../../common/utils/toObjectId'
 
 
 export function createUsersRepository(db: Db) {
@@ -9,7 +10,7 @@ export function createUsersRepository(db: Db) {
   return {
     findAll: () => collection.find().toArray(),
 
-    findById: (id: string) => collection.findOne({ _id: new ObjectId(id) }),
+    findById: (id: string) => collection.findOne({ _id: toObjectId(id, 'User id') }),
 
     findByEmail: (email: string) => collection.findOne({ email }),
 
@@ -59,14 +60,15 @@ export function createUsersRepository(db: Db) {
     },
 
     update: async (id: string, data: UpdateUserDto) => {
+      const _id = toObjectId(id, 'User id')
       await collection.updateOne(
-        { _id: new ObjectId(id) },
+        { _id },
         { $set: { ...data, updatedAt: +new Date() } }
       )
-      return collection.findOne({ _id: new ObjectId(id) })
+      return collection.findOne({ _id })
     },
 
-    delete: (id: string) => collection.deleteOne({ _id: new ObjectId(id) }),
+    delete: (id: string) => collection.deleteOne({ _id: toObjectId(id, 'User id') }),
   }
 }
 

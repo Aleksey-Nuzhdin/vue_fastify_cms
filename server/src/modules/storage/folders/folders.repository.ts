@@ -1,5 +1,5 @@
-import { ObjectId, Db, Collection } from 'mongodb'
-import { validationError } from '../../../common/errors'
+import { Db, Collection } from 'mongodb'
+import { toObjectId } from '../../../common/utils/toObjectId'
 
 import type {FolderView, FolderDocument, CreateFolderData, UpdateFolderData } from './folders.types'
 
@@ -8,53 +8,47 @@ export function createFoldersRepository(db: Db) {
 
   return {
     findAll: () => collection.find().toArray(),
-    findById: (id: string) => collection.findOne({ _id: new ObjectId(id) }),
+    findById: (id: string) => collection.findOne({ _id: toObjectId(id, 'Folder id') }),
     create: async (data: CreateFolderData) => {
-      if (!ObjectId.isValid(data.parentId)) throw validationError('Parent id is not valid')
-      
       const result = await collection.insertOne({
         ...data,
-        parentId: new ObjectId(data.parentId),
+        parentId: toObjectId(data.parentId, 'Parent id'),
         createdAt: +new Date,
         updatedAt: +new Date,
       })
       return collection.findOne({ _id: result.insertedId })
     },
-    delete: (id: string) => collection.deleteOne({ _id: new ObjectId(id) }),
+    delete: (id: string) => collection.deleteOne({ _id: toObjectId(id, 'Folder id') }),
     update: async (id: string, data: UpdateFolderData) => {
-      if (!ObjectId.isValid(id)) throw validationError('Folder id is not valid')
+      const _id = toObjectId(id, 'Folder id')
       const { parentId, name } = data
       
 
+      const updateData: Record<string, unknown> = { updatedAt: +new Date }
+      if (name || name === '') updateData.name = name
+      if (parentId) updateData.parentId = toObjectId(parentId, 'Parent id')
+
       await collection.updateOne(
-        { _id: new ObjectId(id) },
-        { $set: { 
-          ...((name || name === '') && { name }),
-          ...((ObjectId.isValid(parentId+'')) && {parentId: new ObjectId(parentId)}),
-          updatedAt: +new Date 
-        }}
+        { _id },
+        { $set: updateData }
       )
-      return collection.findOne({ _id: new ObjectId(id) })
+      return collection.findOne({ _id })
     },
     getListByParentId: (parentId: string) => {
-      if (!ObjectId.isValid(parentId)) throw validationError('Parent id is not valid')
-      return collection.find({ parentId: new ObjectId(parentId) }).toArray()
+      return collection.find({ parentId: toObjectId(parentId, 'Parent id') }).toArray()
     },
     getListFoldersNameByParentId: (parentId: string) =>{
-      if (!ObjectId.isValid(parentId)) throw validationError('Parent id is not valid')
-      return collection.distinct('name',{ parentId: new ObjectId(parentId) })
+      return collection.distinct('name',{ parentId: toObjectId(parentId, 'Parent id') })
     },
     getFoldersPreview(folderId:string){
-      if(!ObjectId.isValid(folderId)) throw validationError('Folder id is not valid')
       return collection.aggregate([
-        { $match: { parentId: new ObjectId(folderId) } },
+        { $match: { parentId: toObjectId(folderId, 'Folder id') } },
         { $project: { name: 1, _id: 1 } }
       ]).toArray()
     },
     async getFolderView(folderId: string): Promise<FolderView | null> {
-      if (!ObjectId.isValid(folderId)) throw validationError('Folder id is not valid')
       const aggregate =[{
-        $match: { _id:new ObjectId(folderId) }
+        $match: { _id: toObjectId(folderId, 'Folder id') }
       },{
         $graphLookup: {
           from: 'folders',

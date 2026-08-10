@@ -1,7 +1,8 @@
-import { ObjectId, Db, Collection } from 'mongodb'
+import { Db, Collection } from 'mongodb'
 
 import type { Lang } from '@shared/types/form'
 import type { PageDataDto, PageDataMongoDB, FormConfigMongoDB } from './content.types'
+import { toObjectId } from '../../common/utils/toObjectId'
 
 
 
@@ -35,7 +36,7 @@ export function createContentRepository(db: Db) {
         updatedAt: +new Date
       }
       return collectionPages.findOneAndUpdate(
-        { _id: new ObjectId(id) },
+        { _id: toObjectId(id, 'Page id') },
         { $set: updatedPage },
         { returnDocument: 'after' }
       )

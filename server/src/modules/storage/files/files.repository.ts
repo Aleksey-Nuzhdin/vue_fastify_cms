@@ -1,55 +1,48 @@
-import { ObjectId, Db, Collection } from 'mongodb'
+import { Db, Collection } from 'mongodb'
 
 import type { FileDocument, CreateFileData, UpdateFileData } from './files.types'
-import { validationError } from "./../../../common/errors"
+import { toObjectId } from '../../../common/utils/toObjectId'
 
 export function createFilesRepository(db: Db) {
   const collection: Collection<FileDocument> = db.collection('files')
 
   return {
     findAll: () => collection.find().toArray(),
-    findById: (id: string) => collection.findOne({ _id: new ObjectId(id) }),
+    findById: (id: string) => collection.findOne({ _id: toObjectId(id, 'File id') }),
     create: async (data: CreateFileData) => {
-      if (!ObjectId.isValid(data.folderId)) throw validationError('Folder id is not valid')
       const { folderId } = data
         
       const result = await collection.insertOne({
         ...data,
-        folderId: new ObjectId(folderId),
+        folderId: toObjectId(folderId, 'Folder id'),
         createdAt: +new Date,
         updatedAt: +new Date,
       })
       return collection.findOne({ _id: result.insertedId })
     },
-    delete: (id: string) => collection.deleteOne({ _id: new ObjectId(id) }),
+    delete: (id: string) => collection.deleteOne({ _id: toObjectId(id, 'File id') }),
     update: async (id: string, data: UpdateFileData) => {
-      if(!ObjectId.isValid(id)) throw validationError('File id is not valid')
+      const _id = toObjectId(id, 'File id')
 
       const updateData: Record<string, unknown> = { ...data, updatedAt: +new Date }
 
-      if(data.folderId) {
-        if(!ObjectId.isValid(data.folderId)) throw validationError('Folder id is not valid')
-        updateData.folderId = new ObjectId(data.folderId)
-      }
+      if(data.folderId) updateData.folderId = toObjectId(data.folderId, 'Folder id')
 
       await collection.updateOne(
-        { _id: new ObjectId(id) },
+        { _id },
         { $set: updateData }
       )
-      return collection.findOne({ _id: new ObjectId(id) })
+      return collection.findOne({ _id })
     },
     getListByFolderId: (folderId: string) => {
-      if(!ObjectId.isValid(folderId)) throw validationError('Folder id is not valid')
-      return collection.find({ folderId: new ObjectId(folderId) }).toArray()
+      return collection.find({ folderId: toObjectId(folderId, 'Folder id') }).toArray()
     },
     getListFilesNameByFolderId: (folderId: string) =>{
-      if(!ObjectId.isValid(folderId)) throw validationError('Folder id is not valid')
-      return collection.distinct('name',{ folderId: new ObjectId(folderId) })
+      return collection.distinct('name',{ folderId: toObjectId(folderId, 'Folder id') })
     },
     getFilesPreview(folderId:string){
-      if(!ObjectId.isValid(folderId)) throw validationError('Folder id is not valid')
       return collection.aggregate([{ 
-        $match: { folderId: new ObjectId(folderId) } 
+        $match: { folderId: toObjectId(folderId, 'Folder id') } 
       },{
         $project: {
           _id:1,

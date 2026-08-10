@@ -1,6 +1,7 @@
-import { ObjectId, Db, Collection, WithId, Document } from 'mongodb'
+import { Db, Collection, WithId, Document } from 'mongodb'
 import type { ReportDocument, CreateReportData, UpdateReportData, GetReportsQuery } from './reports.types'
-import { validationError, notFoundError } from '../../common/errors'
+import { notFoundError } from '../../common/errors'
+import { toObjectId } from '../../common/utils/toObjectId'
 
 export function createReportsRepository(db: Db) {
   const collection: Collection<ReportDocument> = db.collection('reports')
@@ -9,14 +10,15 @@ export function createReportsRepository(db: Db) {
   return {
     findAll: () => collection.find().toArray(),
 
-    findById: (id: string) => collection.findOne({ _id: new ObjectId(id) }),
+    findById: (id: string) => collection.findOne({ _id: toObjectId(id, 'Report id') }),
 
     findList: (params:GetReportsQuery)=>{
       const { skip = 0, limit, title, authorName, authorEmail, userEmail, userName,userId, status } = params
+      const userObjectId = userId ? toObjectId(userId, 'User id') : undefined
 
       const aggregation: Document[] = [{
         $match: { 
-          ...(userId && { userId: new ObjectId(userId) }),
+          ...(userObjectId && { userId: userObjectId }),
           ...(title && { title: { $regex: title, $options: 'i' } }),
           ...(authorName && { 'authors.name': { $regex: ''+authorName, $options: 'i' } }),
           ...(authorEmail && { 'authors.email': { $regex: authorEmail, $options: 'i' } }),
@@ -80,11 +82,9 @@ export function createReportsRepository(db: Db) {
       return collection.aggregate<AggregateReturn>(aggregation).toArray()
     },
     create: async (data: CreateReportData) => {
-      if( !ObjectId.isValid(data.userId) ) throw validationError('User id is not valid')
-
       const dataCreate:ReportDocument = {
         ...data,
-        userId: new ObjectId(data.userId),
+        userId: toObjectId(data.userId, 'User id'),
         createdAt: +new Date(),
         updatedAt: +new Date(),
       }
@@ -94,16 +94,17 @@ export function createReportsRepository(db: Db) {
     },
 
     update: async (id: string, data: UpdateReportData):Promise<ReportItem> => {
+      const _id = toObjectId(id, 'Report id')
       await collection.updateOne(
-        { _id: new ObjectId(id) },
+        { _id },
         { $set: { ...data, updatedAt: +new Date() } }
       )
-      const res = await collection.findOne({ _id: new ObjectId(id) })
+      const res = await collection.findOne({ _id })
       if(res === null) throw notFoundError('Report', id)
       return res
     },
 
-    delete: (id: string) => collection.deleteOne({ _id: new ObjectId(id) }),
+    delete: (id: string) => collection.deleteOne({ _id: toObjectId(id, 'Report id') }),
   }
 }
 
