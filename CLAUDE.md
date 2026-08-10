@@ -127,7 +127,6 @@ PATCH  /api/auth/change-password  [auth required]
 GET    /api/auth/check-email/:email          # is email free for registration
 POST   /api/auth/forgot-password
 POST   /api/auth/reset-password-code
-GET    /api/auth/get-code/:email  [admin]    # admin helper to reset a user's password
 
 GET    /api/profile/me            [auth required]
 

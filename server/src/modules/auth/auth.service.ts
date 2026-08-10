@@ -20,12 +20,10 @@ type changePassword = {userId:string, oldPassword:string, newPassword:string, re
 export function createAuthService( jwt:JWT, redis:FastifyRedis, usersRepository:UsersRepository ) {
 
   return {
-    async getCode(email:string){
-      return redis.get('forgotPassword:'+email)
-    },
     async forgotPassword(email:string){
       //Если код есть, значить письмо уже было отправленно
       //лок 5 мин, на повторную отправку
+      
       const code = await redis.get('forgotPassword:'+email);
       if( code ) throw cooldownError()
 
@@ -222,8 +220,14 @@ export function createAuthService( jwt:JWT, redis:FastifyRedis, usersRepository:
       const user = await usersRepository.findById(userId)
       if( !user ) throw notFoundError('User', userId)
 
-      const keys = await redis.keys(`user:${userId}:token:*`)
-      if (keys.length) await redis.del(...keys)
+      const pattern = `user:${userId}:token:*`
+      let cursor = '0'
+
+      do {
+        const [next, keys] = await redis.scan(cursor, 'MATCH', pattern, 'COUNT', 100)
+        cursor = next
+        if (keys.length) await redis.unlink(...keys)
+      } while (cursor !== '0')
     },
 
     async checkEmail(email:string){

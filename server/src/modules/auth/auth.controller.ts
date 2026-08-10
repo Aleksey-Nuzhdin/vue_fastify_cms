@@ -26,10 +26,6 @@ const removeCookieRefreshToken = ( reply: FastifyReply )=>{
 
 export function createAuthController( service: AuthService ) {
   return {
-    async getCode(request: FastifyRequest<{ Params: { email: string } }>, reply: FastifyReply) {
-      const { email } = request.params
-      return await service.getCode(email)
-    },
     async forgotPassword(request: FastifyRequest<{ Body: { email: string } }>, reply: FastifyReply) {
       const { email } = request.body
       return await service.forgotPassword(email)

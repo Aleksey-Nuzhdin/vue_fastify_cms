@@ -27,7 +27,7 @@ export const buildApp = async () => {
   app.register(cookie, {
     secret: process.env.COOKIE_SECRET,
   })
-  app.register(cors)
+  app.register(cors, { origin: false })
   app.register(helmet, {
     contentSecurityPolicy: false,
   })
