@@ -1,8 +1,6 @@
 import type { Router } from 'vue-router'
-import type { UserRole } from '@/shared/types/user.types'
 import { useAuthStore } from '@/modules/auth'
 import { useShowPopup } from '@/shared/components/Popup/useShowPopup'
-import type { RouteLocationRaw } from 'vue-router'
 
 
 export function setupGuards(router: Router): void {
@@ -14,12 +12,11 @@ export function setupGuards(router: Router): void {
     const authStore = useAuthStore()
 
     // Инициализация при первом переходе
-    if (!authStore.isAuth || authStore.isLoading) {
-      await authStore.init()
-    }
+    if (!authStore.isAuth || authStore.isLoading) await authStore.init()
 
-    const isAuthPage = to.meta.auth === true
-    const allowedRoles = to.meta.roles as UserRole[] | undefined
+    const allowedRoles = to.meta.roles
+    // Наличие roles само по себе требует авторизации — auth: true дублировать не обязательно
+    const isAuthPage = to.meta.auth === true || allowedRoles !== undefined
     const fromPage = (from.name && from) || { name: 'home' }
     const loginPage = { name: 'login', query: { redirect: to.fullPath } }
     const {addPopup} = useShowPopup()
@@ -39,11 +36,12 @@ export function setupGuards(router: Router): void {
       return loginPage
     }
 
-    // Проверка ролей
+    // Проверка ролей. user здесь заведомо не null: роут с roles требует авторизации,
+    // неавторизованного развернуло блоком выше
     if (allowedRoles && authStore.user) {
       const hasRole = allowedRoles.includes(authStore.user.role)
       if (!hasRole){
-        const redirect = to.meta.roleRedirect as RouteLocationRaw | undefined
+        const redirect = to.meta.roleRedirect
         if( redirect ) return redirect
 
         addPopup({

@@ -76,7 +76,9 @@ export const routes: RouteRecordRaw[] = [
     path: '',
     name: 'admin-layout',
     component: () => import('@/modules/admin/components/AdminPageLayout.vue'),
-    meta: { auth: true, layout: 'admin', roles: ['admin', 'manager', 'vereficator'] },
+    // roleRedirect наследуется детьми, у которых нет своего: терминальный фолбэк для
+    // всех, кого админка не приняла — профилю роли не нужны, цепочка отказов обрывается
+    meta: { auth: true, layout: 'admin', roles: ['admin', 'manager', 'vereficator'], roleRedirect:{ name:'profile'} },
     children:[{
       path: '/admin',
       name: 'admin',
@@ -96,12 +98,12 @@ export const routes: RouteRecordRaw[] = [
       path: '/admin/reports',
       name: 'admin-reports',
       component: () => import('@/modules/admin/reports/pages/AdminReportsPage.vue'),
-      meta: { title: 'Доклады' },
+      meta: { title: 'Доклады', roles: ['admin', 'vereficator'], roleRedirect: { name: 'admin' } },
     },{
       path: '/admin/users',
       name: 'admin-users',
       component: () => import('@/modules/admin/users/pages/AdminUsersPage.vue'),
-      meta: { title: 'nav.users' },
+      meta: { title: 'nav.users', roles: ['admin', 'vereficator'], roleRedirect: { name: 'admin' } },
     }]
   },
   {
