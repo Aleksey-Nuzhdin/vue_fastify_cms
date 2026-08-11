@@ -34,6 +34,8 @@ export function toPublicUser(u: ReturnUser<ObjectId | string>): ReturnUser<strin
 }
 
 
+const normalizeEmail = (email?:string) => (email ?? '').trim().toLowerCase()
+
 export function createUsersService(repo: UsersRepository) {
   return {
     getAll: async () =>{
@@ -60,10 +62,13 @@ export function createUsersService(repo: UsersRepository) {
     },
 
     create: async (data: CreateUserPayload, performedBy: PayloadAccess ) => {
-      const existing = await repo.findByEmail(data.email)
-      
-      if( existing ) throw conflictError('Email already exists')
+      const email = normalizeEmail(data.email)
+
+      if( !email ) throw validationError('Invalid email')
       if( !data.password ) throw validationError('Password is required')
+
+      const existing = await repo.findByEmail(email)
+      if( existing ) throw conflictError('Email already exists')
 
       const hashPassword = await bcrypt.hash(data.password, 12)
 
@@ -71,6 +76,7 @@ export function createUsersService(repo: UsersRepository) {
 
       const createUser:CreateUserData = {
         ...data,
+        email,
         role,
         password: hashPassword,
       }

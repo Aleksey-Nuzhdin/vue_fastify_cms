@@ -5,6 +5,8 @@ import { authApi } from './auth.api'
 import type { AuthUser, LoginRequest, RegistrationDto, UserRole } from './auth.types'
 import { USER_ROLES } from '@shared/constants'
 
+const normalizeEmail = (email?:string) => (email ?? '').trim().toLowerCase()
+
 // Ключи, у которых значение — РОВНО string (литеральные union вроде role
 // исключаются: у них string не assignable обратно).
 type StringKey<T> = {
@@ -78,10 +80,12 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   async function login(credentials: LoginRequest): Promise<boolean> {
+    const loginData:LoginRequest = {...credentials, email: normalizeEmail(credentials.email)}
+
     isLoading.value = true
 
     try {
-      const {accessToken} = await authApi.login(credentials)
+      const {accessToken} = await authApi.login(loginData)
 
       tokenStorage.set( accessToken )
 
@@ -152,7 +156,7 @@ export const useAuthStore = defineStore('auth', () => {
     const {name, phone, email, password, city, interests, company, bio, plan} = userData
     const registerData:RegistrationDto = {
       phone: phone.replace(/\D/g, ''),
-      email: email.trim().toLowerCase(),
+      email: normalizeEmail(email),
       password: password.trim(),
       name,
       city,

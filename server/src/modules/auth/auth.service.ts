@@ -17,13 +17,17 @@ type AuthUserFromToken = PayloadAccess | PayloadRefresh
 
 type changePassword = {userId:string, oldPassword:string, newPassword:string, refreshToken:string}
 
+const normalizeEmail = (email?:string) => (email ?? '').trim().toLowerCase()
+
 export function createAuthService( jwt:JWT, redis:FastifyRedis, usersRepository:UsersRepository ) {
 
   return {
     async forgotPassword(email:string){
+      email = normalizeEmail(email)
+
       //Если код есть, значить письмо уже было отправленно
       //лок 5 мин, на повторную отправку
-      
+
       const code = await redis.get('forgotPassword:'+email);
       if( code ) throw cooldownError()
 
@@ -47,6 +51,8 @@ export function createAuthService( jwt:JWT, redis:FastifyRedis, usersRepository:
       }
     },
     async resetPasswordWithCode({email, code, newPassword}:{email:string, code:string, newPassword:string}){
+      email = normalizeEmail(email)
+
       if( !(Number(code) >= 10 ** 5 && Number(code) < 10 ** 6) ) throw validationError('Invalid code')
 
       const codeStr = await redis.get('forgotPassword:'+email)
@@ -104,7 +110,9 @@ export function createAuthService( jwt:JWT, redis:FastifyRedis, usersRepository:
     },
 
     async validateUser(email:string, password:string){
-      const user = await usersRepository.findByEmail(email)  
+      email = normalizeEmail(email)
+
+      const user = await usersRepository.findByEmail(email)
       if( !user ) return null
       
       const isMatch = await bcrypt.compare(password, user.password)
@@ -230,15 +238,16 @@ export function createAuthService( jwt:JWT, redis:FastifyRedis, usersRepository:
     },
 
     async checkEmail(email:string){
+      email = normalizeEmail(email)
       if( !email ) throw validationError('Invalid email')
-      email = email.trim().toLowerCase()
-      
+
       const existing = await usersRepository.findByEmail(email)
       return { available: !existing }
     },
 
     async registration(user:RegistrationDto){
-      const { password, email, name, phone, city, interests, company, bio, plan } = user
+      const { password, name, phone, city, interests, company, bio, plan } = user
+      const email = normalizeEmail(user.email)
 
       if( !password || !email || !name || !phone) throw validationError('Invalid data')
 
@@ -256,7 +265,7 @@ export function createAuthService( jwt:JWT, redis:FastifyRedis, usersRepository:
         //required
         name,
         phone: phone,
-        email: email.trim().toLowerCase(),
+        email,
         password: hashPassword,
         role:'user',
       }
