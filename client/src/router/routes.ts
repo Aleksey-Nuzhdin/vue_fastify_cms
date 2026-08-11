@@ -98,12 +98,12 @@ export const routes: RouteRecordRaw[] = [
       path: '/admin/reports',
       name: 'admin-reports',
       component: () => import('@/modules/admin/reports/pages/AdminReportsPage.vue'),
-      meta: { title: 'Доклады', roles: ['admin', 'vereficator'], roleRedirect: { name: 'admin' } },
+      meta: { title: 'Доклады', roles: ['admin', 'manager','vereficator'], roleRedirect: { name: 'admin' } },
     },{
       path: '/admin/users',
       name: 'admin-users',
       component: () => import('@/modules/admin/users/pages/AdminUsersPage.vue'),
-      meta: { title: 'nav.users', roles: ['admin', 'vereficator'], roleRedirect: { name: 'admin' } },
+      meta: { title: 'nav.users', roles: ['admin', 'manager', 'vereficator'], roleRedirect: { name: 'admin' } },
     }]
   },
   {

@@ -20,6 +20,12 @@ import type { PayloadAccess } from '../auth/auth.types'
 
 const MAX_LIMIT = 100
 
+
+// Кто видит чужие доклады и может их модерировать
+const MODERATOR_ROLES: UserRole[] = ['admin', 'vereficator', 'manager']
+// Из них те, кому в докладе доступен только статус (admin правит всё)
+const STATUS_ONLY_ROLES: UserRole[] = ['vereficator', 'manager']
+
 export function createReportsService(repo: ReportsRepository) {
   const fsStorage = fsStorageService()
 
@@ -54,7 +60,7 @@ export function createReportsService(repo: ReportsRepository) {
       }
 
       //Если admin, то можно просматривать все отчеты
-      if( !['admin', 'vereficator'].includes(performedBy.role) ){ 
+      if( !MODERATOR_ROLES.includes(performedBy.role) ){ 
         findQuery.userId = performedBy._id
       }
       
@@ -90,14 +96,15 @@ export function createReportsService(repo: ReportsRepository) {
       const report = await repo.findById(id)
       if(!report) throw notFoundError('Report', id)
 
-      const chekRoles:UserRole[] = ['admin', 'vereficator']
-      if( !chekRoles.includes(performedBy.role) && report.userId.toString() !== performedBy._id){
+      // Чужой доклад — только модераторам. Роль берётся из токена;
+      // какие статусы кому можно, решает контроллер (reports.controller.ts:135)
+      if( !MODERATOR_ROLES.includes(performedBy.role) && report.userId.toString() !== performedBy._id){
         throw validationError('User is not valid')
       }
 
 
-      //Если верефикатор, то можно поменять только статус
-      if(performedBy.role === 'vereficator'){
+      //Если верефикатор или менеджер, то можно поменять только статус у чужого доклада
+      if( STATUS_ONLY_ROLES.includes(performedBy.role) && report.userId.toString() !== performedBy._id){
         const dataUpdate = buildUpdate<UpdateReportData>({
           status: data.status,
           title: null,

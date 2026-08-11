@@ -103,6 +103,7 @@ export function createReportsController(service: ReportsService) {
     update: async (request: FastifyRequest<{ Params: IdParam }>) => {
 
       const userId = request.user._id
+      const role = request.user.role
       const id = request.params.id
       function isBodyKey(key: string): key is keyof UpdateReportDto {
         return ['section','title', 'description', 'fileAnnotation'].includes(key)
@@ -134,9 +135,12 @@ export function createReportsController(service: ReportsService) {
         }
         if( key === 'status'){
           if(part.value === 'draft') payload.status = 'draft'
-          if(part.value === 'published') payload.status = 'published'
-          if(part.value === 'rejected') payload.status = 'rejected'
           if(part.value === 'waiting') payload.status = 'waiting'
+          
+          if(['admin', 'manager', 'vereficator'].includes(role)){
+            if(part.value === 'published') payload.status = 'published'
+            if(part.value === 'rejected') payload.status = 'rejected'
+          }
           continue
         }
         if(key === 'fileAnnotation'){
