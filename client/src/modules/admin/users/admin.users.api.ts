@@ -10,6 +10,6 @@ export const adminUsersApi = {
     fetcher.post('/users/create', formData),
   updateUser: (id: string, bodyUpdate: UpdateUserDto):Promise<ReturnUser> =>
     fetcher.patch('/users/update/' + id, bodyUpdate),
-  deleteUser: (id: string):Promise<ReturnUser<string>> =>
+  deleteUser: (id: string):Promise<void> =>
     fetcher.delete('/users/delete/' + id),
 }

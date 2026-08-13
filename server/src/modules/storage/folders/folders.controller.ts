@@ -17,8 +17,9 @@ export function createFoldersController( service: FolderService ) {
       const result = await service.create(request.body)
       return reply.code(201).send(result)
     },
-    delete(request: FastifyRequest<{ Params: { id: string } }>) {
-      return service.delete(request.params.id)
+    async delete(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
+      await service.delete(request.params.id)
+      return reply.status(204).send()
     },
     update(request: FastifyRequest<{ Params: { id: string }; Body: UpdateFolderDto }>) {
       return service.update(request.params.id, request.body)

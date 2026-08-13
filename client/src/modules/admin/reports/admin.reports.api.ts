@@ -10,6 +10,6 @@ export const adminReportsApi = {
     fetcher.post('/reports/create', formData),
   updateReport: (id: string, formData: FormData):Promise<ReportBase> =>
     fetcher.patch('/reports/update/' + id, formData),
-  deleteReport: (id: string):Promise<ReportBase> =>
+  deleteReport: (id: string):Promise<void> =>
     fetcher.delete('/reports/delete/' + id),
 }

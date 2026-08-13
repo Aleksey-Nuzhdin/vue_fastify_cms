@@ -88,14 +88,19 @@ export function useReports(options?: UseReportsOptions) {
 
   // --- Delete ---
 
-  const deleteReport = async (id: string) => {
-    const res = await profileApi.deleteReport(id)
-    if (isFetcherError(res)) throw unknownError
-
-    queryClient.setQueryData(['profile-reports'], (old: ResponseReportList) => ({
-      ...old,
-      reports: old.reports.filter(r => r._id !== id),
-    }))
+  const deleteReport = async (id: string): Promise<boolean> => {
+    try {
+      await profileApi.deleteReport(id)
+      queryClient.setQueryData(['profile-reports'], (old: ResponseReportList) => ({
+        ...old,
+        reports: old.reports.filter(r => r._id !== id),
+      }))
+      return true
+    } catch (error) {
+      if (isFetcherError(error)) showPopup.addErrorPopup(error.message)
+      else showPopup.addErrorPopup(unknownError.message)
+      return false
+    }
   }
 
   return {

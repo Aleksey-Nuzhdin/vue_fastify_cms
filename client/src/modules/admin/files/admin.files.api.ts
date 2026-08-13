@@ -11,7 +11,7 @@ export const adminFilesApi = {
     fetcher.post('/storage/files/create', formData),
   updateFile: (id: string, formData: FormData):Promise<FileBase> =>
     fetcher.patch('/storage/files/update/' + id, formData),
-  deleteFile: (id: string):Promise<FileBase> =>
+  deleteFile: (id: string):Promise<void> =>
     fetcher.delete('/storage/files/delete/' + id),
 
   //Folders
@@ -23,6 +23,6 @@ export const adminFilesApi = {
     fetcher.post('/storage/folders/create', createFolderDto),
   updateFolder: (id: string, updateFolderDto: UpdateFolderDto):Promise<FolderBase> =>
     fetcher.patch('/storage/folders/update/' + id, updateFolderDto),
-  deleteFolder: (id: string):Promise<FolderBase> =>
+  deleteFolder: (id: string):Promise<void> =>
     fetcher.delete('/storage/folders/delete/' + id),
 }

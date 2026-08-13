@@ -67,8 +67,9 @@ export function createFilesController( service: FilesService ) {
       const result = await service.update(id, payloadData, file)
       return reply.code(200).send(result)
     },
-    delete(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
-      return service.delete(request.params.id)
+    async delete(request: FastifyRequest<{ Params: { id: string } }>, reply: FastifyReply) {
+      await service.delete(request.params.id)
+      return reply.status(204).send()
     }
   }
 

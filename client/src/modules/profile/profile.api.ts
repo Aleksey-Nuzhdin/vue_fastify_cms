@@ -22,7 +22,7 @@ export const profileApi = {
     fetcher.patch<ReportBase>('/reports/update/' + id, formData),
 
   deleteReport: (id: string) =>
-    fetcher.delete('/reports/delete/' + id),
+    fetcher.delete<void>('/reports/delete/' + id),
 
   updateProfile: (data: UpdateProfileDto) =>
     fetcher.patch<UpdateProfileResponse>('/profile/update', data),
