@@ -84,7 +84,7 @@ export function createAuthController( service: AuthService ) {
       const accessToken = request.headers.authorization?.split(' ')[1]
       removeCookieRefreshToken(reply)
 
-      await service.logout(refreshToken, accessToken!)
+      await service.logout(refreshToken, accessToken)
     },
 
     async logoutAll(request: FastifyRequest, reply: FastifyReply) {

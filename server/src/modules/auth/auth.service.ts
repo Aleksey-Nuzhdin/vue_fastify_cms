@@ -3,7 +3,7 @@ import { PayloadAccess, PayloadRefresh, RegistrationDto } from './auth.types'
 import { CreateUserData, UserDocument } from '../users/users.types'
 import type { ObjectId } from 'mongodb'
 import { UsersRepository } from '../users/users.repository'
-import { JWT, SignOptions } from '@fastify/jwt'
+import { JWT } from '@fastify/jwt' // SignOptions вернуть вместе с signToken, если он понадобится
 import { FastifyRedis } from '@fastify/redis'
 import bcrypt from 'bcrypt'
 import { randomUUID, randomInt } from 'crypto' 
@@ -81,33 +81,49 @@ export function createAuthService( jwt:JWT, redis:FastifyRedis, usersRepository:
       return true
     },
     async changePassword({userId, oldPassword, newPassword, refreshToken}:changePassword){
+      // Разбираем refresh-cookie ДО любых необратимых действий: отказ ниже по методу
+      // оставил бы пароль уже сменённым, старые сессии живыми, а клиента без токенов
+      let payload: AuthUserFromToken
+      try {
+        payload = jwt.verify<AuthUserFromToken>(refreshToken)
+      } catch {
+        throw unauthorizedError('Invalid token')
+      }
+
+      // verify проверяет только подпись: access-токен подписан тем же секретом и прошёл бы её.
+      // Тип payload сужается до PayloadRefresh этой проверкой, а не аннотацией слева
+      if( payload.type !== 'refresh' || !payload._id || !payload.uuid ) throw unauthorizedError('Invalid token type')
+      if( payload._id !== userId ) throw unauthorizedError('Invalid token')
+
+      const { remember } = payload
+
       const user = await usersRepository.findById(userId)
       if( !user ) throw notFoundError('User', userId)
 
       const isCorrectOldPassword = await bcrypt.compare(oldPassword, user.password)
 
       if( !isCorrectOldPassword ) throw validationError('Invalid credentials')
-      
+
       const hashPassword = await bcrypt.hash(newPassword, 12)
       const updatedUser = await usersRepository.update(userId, {password:hashPassword})
       if( !updatedUser ) throw conflictError('User not updated')
 
-      // Достаём remember ДО удаления всех токенов
-      const payload:PayloadRefresh = jwt.verify(refreshToken)
-      const { remember } = payload
-
+      // logoutAll строго ДО getAccessAndRefreshTokens (SEC-11), иначе снесёт свежую пару
       await this.logoutAll(userId)
 
       return this.getAccessAndRefreshTokens(updatedUser, remember)
       
     },
-    signToken:(user: AuthUserFromToken, options?: Partial<SignOptions>)=> {
-      return jwt.sign(user, options)
-    },
+    // Обёртки не вызываются нигде в проекте (проверено грепом при FIX-5) —
+    // закомментированы, удаление в DX-8. Токены выпускает getAccessAndRefreshTokens,
+    // проверяют — guard и методы ниже
+    // signToken:(user: AuthUserFromToken, options?: Partial<SignOptions>)=> {
+    //   return jwt.sign(user, options)
+    // },
 
-    verifyToken:async (token: string) => {
-      return jwt.verify<AuthUserFromToken>(token) // выбросит ошибку, если недействителен
-    },
+    // verifyToken:async (token: string) => {
+    //   return jwt.verify<AuthUserFromToken>(token) // выбросит ошибку, если недействителен
+    // },
 
     async validateUser(email:string, password:string){
       email = normalizeEmail(email)
@@ -176,14 +192,15 @@ export function createAuthService( jwt:JWT, redis:FastifyRedis, usersRepository:
 
     async refresh(refreshToken: string) {    
       // Проверяем подпись
-      let payload: PayloadRefresh
+      let payload: AuthUserFromToken
       try {
-        payload = jwt.verify(refreshToken)
+        payload = jwt.verify<AuthUserFromToken>(refreshToken)
       } catch {
         throw unauthorizedError('Invalid token')
       }
-      
-      // Проверяем что только _id (это refresh, не access)
+
+      // Проверяем что это refresh, а не access (подпись у них общая) —
+      // проверка же и сужает payload до PayloadRefresh
       if( payload.type !== 'refresh' ) throw unauthorizedError('Invalid token')
       
       // const tokenFromRedis = await redis.get(`user:${payload._id}:token:refresh:${payload.uuid}`)
@@ -209,18 +226,24 @@ export function createAuthService( jwt:JWT, redis:FastifyRedis, usersRepository:
       return this.getAccessAndRefreshTokens(user, payload.remember)
     },
 
-    async logout(refreshToken: string, accessToken: string) {
-      let payloadRef: PayloadRefresh
-      let payloadAcc: PayloadAccess
+    // Best-effort: каждый токен разбирается и удаляется независимо, провал одного
+    // не отменяет удаление ключа второго. accessToken опционален — заголовка может не быть
+    async logout(refreshToken: string, accessToken?: string) {
       try {
-        payloadRef = jwt.verify(refreshToken)
-        payloadAcc = jwt.verify(accessToken)
+        const payloadRef = jwt.verify<AuthUserFromToken>(refreshToken)
+        if( payloadRef.type === 'refresh' ) await redis.del(`user:${payloadRef._id}:token:refresh:${payloadRef.uuid}`)
       } catch {
-        return // Токен уже невалидный, ничего не делаем
+        // Токен уже невалидный — удалять нечего
       }
 
-      await redis.del(`user:${payloadRef._id}:token:refresh:${payloadRef.uuid}`)
-      await redis.del(`user:${payloadAcc._id}:token:access:${payloadAcc.uuid}`)
+      if( !accessToken ) return
+
+      try {
+        const payloadAcc = jwt.verify<AuthUserFromToken>(accessToken)
+        if( payloadAcc.type === 'access' ) await redis.del(`user:${payloadAcc._id}:token:access:${payloadAcc.uuid}`)
+      } catch {
+        // Сломанный access-токен guard всё равно не пропустит
+      }
     },
 
     async logoutAll(userId: string) {
