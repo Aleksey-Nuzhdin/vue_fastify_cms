@@ -98,11 +98,11 @@ export function createAuthController( service: AuthService ) {
       request: FastifyRequest<{ Body: RegistrationDto }>, 
       reply: FastifyReply
     ): Promise<ResponseRegister> {
-      const { accessToken, refreshToken } = await service.registration(request.body)
+      const { accessToken, refreshToken, emailSent } = await service.registration(request.body)
 
       setCookieRefreshToken(reply, refreshToken, false)
-      
-      return { accessToken }
+
+      return { accessToken, emailSent }
     },
 
     // async getMyProfile(request: FastifyRequest, reply: FastifyReply){

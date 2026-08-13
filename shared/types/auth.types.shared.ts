@@ -14,6 +14,8 @@ export interface LoginResponse {
 }
 export interface RegistrationResponse {
   accessToken: string
+  // false — юзер создан и токены выданы, но приветственное письмо не ушло
+  emailSent: boolean
 }
 
 export interface RefreshResponse {

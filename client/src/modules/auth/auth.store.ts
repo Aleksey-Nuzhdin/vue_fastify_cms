@@ -152,7 +152,7 @@ export const useAuthStore = defineStore('auth', () => {
     return initPromise
   }
 
-  async function register(userData:RegistrationDto):Promise<{status:boolean, error?:unknown}> {
+  async function register(userData:RegistrationDto):Promise<{status:boolean, error?:unknown, emailSent?:boolean}> {
     const {name, phone, email, password, city, interests, company, bio, plan} = userData
     const registerData:RegistrationDto = {
       phone: phone.replace(/\D/g, ''),
@@ -166,14 +166,14 @@ export const useAuthStore = defineStore('auth', () => {
       plan
     }
     try {
-      const { accessToken } =await authApi.register(registerData)
+      const { accessToken, emailSent } =await authApi.register(registerData)
 
       tokenStorage.set( accessToken )
 
       const profileData = await authApi.getProfile()
       user.value = toFullUser(profileData)
 
-      return { status: true }
+      return { status: true, emailSent }
     } catch (error) {
       return { status: false, error }
     }

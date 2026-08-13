@@ -1,4 +1,4 @@
-import { unauthorizedError, conflictError, cooldownError, notFoundError, validationError, internalError } from '../../common/errors'
+import { unauthorizedError, conflictError, cooldownError, notFoundError, validationError } from '../../common/errors'
 import { PayloadAccess, PayloadRefresh, RegistrationDto } from './auth.types'
 import { CreateUserData, UserDocument } from '../users/users.types'
 import type { ObjectId } from 'mongodb'
@@ -7,7 +7,7 @@ import { JWT } from '@fastify/jwt' // SignOptions вернуть вместе с
 import { FastifyRedis } from '@fastify/redis'
 import bcrypt from 'bcrypt'
 import { randomUUID, randomInt } from 'crypto' 
-import { mailer } from 'src/services/mailer/mailer'
+import type { Mailer } from 'src/services/mailer/mailer'
 import type { TemplateData, DataMailer } from 'src/services/mailer/mailer.type'
 // import { buildUpdate } from '../../common/utils/buildUpdate'
 
@@ -19,7 +19,7 @@ type changePassword = {userId:string, oldPassword:string, newPassword:string, re
 
 const normalizeEmail = (email?:string) => (email ?? '').trim().toLowerCase()
 
-export function createAuthService( jwt:JWT, redis:FastifyRedis, usersRepository:UsersRepository ) {
+export function createAuthService( jwt:JWT, redis:FastifyRedis, usersRepository:UsersRepository, mailer:Mailer ) {
 
   return {
     async forgotPassword(email:string){
@@ -43,12 +43,11 @@ export function createAuthService( jwt:JWT, redis:FastifyRedis, usersRepository:
       const dataMailer:DataMailer = {email, subject:'Forgot password', text:`Code: ${codeStr}`}
       const template:TemplateData = {type:'forgotPassword', code:codeStr}
 
-      try{
-        await mailer(dataMailer, template)
-        return true
-      }catch(e:any){
-        throw internalError(e?.message+''|| 'Mailer error')
-      }
+      // Письмо здесь — смысл операции: не ушло, значит кода у пользователя нет
+      // и восстановление провалено. Ошибку не перехватываем: errorHandler отдаст
+      // константное 500 INTERNAL_ERROR, а причина уже записана в лог внутри mailer
+      await mailer(dataMailer, template)
+      return true
     },
     async resetPasswordWithCode({email, code, newPassword}:{email:string, code:string, newPassword:string}){
       email = normalizeEmail(email)
@@ -299,14 +298,21 @@ export function createAuthService( jwt:JWT, redis:FastifyRedis, usersRepository:
       const dataMailer:DataMailer = { email:userCreate.email, subject:'Registration', text:`Thank you for registration` }
       const template:TemplateData = { type:'registration' }
 
+      // Письмо приветственное, на результат регистрации оно не влияет: юзер уже
+      // создан, и валить операцию из-за почты значило бы оставить его без токенов
+      // и с 409 на повторную попытку. Причина сбоя записана в лог внутри mailer,
+      // клиенту уезжает только признак — по нему показывается предупреждение
+      let emailSent = true
       try{
         await mailer(dataMailer, template)
-      }catch(e:any){
-        throw internalError(e?.message+''|| 'Mailer error')
+      }catch{
+        emailSent = false
       }
-  
-      return this.getAccessAndRefreshTokens(createdUser, false)
-    },    
+
+      const tokens = await this.getAccessAndRefreshTokens(createdUser, false)
+
+      return { ...tokens, emailSent }
+    },
   } 
 }
 

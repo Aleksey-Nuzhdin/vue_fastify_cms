@@ -38,8 +38,12 @@ const router = useRouter()
 
 const registerUser = async ()=>{
   if(formValue.value === null) return
-  const {status, error} = await authStore.register(formValue.value)
+  const {status, error, emailSent} = await authStore.register(formValue.value)
   if( status ){
+    // Регистрация прошла, но приветственное письмо не ушло. Попапы живут вне
+    // страницы (ShowPopup смонтирован в App.vue), поэтому предупреждение
+    // переживёт переход и покажется уже на профиле
+    if( emailSent === false ) showPopup.addWarningPopup(t('auth.register.popupMailNotSent'))
     router.push('/profile')
   }else{
     showPopup.addPopup({

@@ -5,6 +5,7 @@ export type {LoginRequest, LoginResponse, RegistrationDto, AuthUser} from '@shar
 
 export interface ResponseRegister {
   accessToken: string
+  emailSent: boolean
 }
 
 export interface PayloadAccess extends Pick<UserBase, 'name' | 'email' | 'role' | '_id'> {

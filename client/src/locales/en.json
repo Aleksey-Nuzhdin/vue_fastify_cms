@@ -46,7 +46,8 @@
       "signIn": "Sign in",
       "closed": "Registration is closed",
       "loading": "Loading",
-      "popupErrorTitle": "Registration error"
+      "popupErrorTitle": "Registration error",
+      "popupMailNotSent": "The welcome email was not sent"
     },
     "forgot": {
       "title": "Password recovery",

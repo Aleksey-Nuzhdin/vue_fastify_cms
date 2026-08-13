@@ -2,6 +2,7 @@ import type { FastifyInstance } from 'fastify';
 import { createAuthController } from './auth.controller';
 import { createAuthService } from './auth.service';
 import { createUsersRepository } from '../users/users.repository';
+import { createMailer } from 'src/services/mailer/mailer';
 import { guardAuth } from 'src/common/middlewares/authRole.guard';
 import type { ChangePasswordDto } from './auth.types';
 
@@ -9,7 +10,8 @@ const configRL = (count:number) => ({ config: { rateLimit: { max: count, timeWin
 
 export async function authRoutes(app: FastifyInstance) {
   const usersRepo = createUsersRepository(app.mongo.db)
-  const service = createAuthService(app.jwt, app.redis, usersRepo)
+  const mailer = createMailer(app.log)
+  const service = createAuthService(app.jwt, app.redis, usersRepo, mailer)
   const controller = createAuthController(service)
 
   app.get('/check-email/:email', configRL(30), controller.checkEmail)
