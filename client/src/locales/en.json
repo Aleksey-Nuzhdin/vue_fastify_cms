@@ -87,7 +87,11 @@
     },
     "avatar": {
       "selectFile": "Select a file",
-      "upload": "Upload"
+      "upload": "Upload",
+      "tooLarge": "File is too large — {size} MB maximum",
+      "tooLargeImage": "Image is too large — {size} px per side maximum",
+      "notImage": "The avatar must be an image",
+      "error": "Failed to upload the avatar"
     }
   },
   "common": {

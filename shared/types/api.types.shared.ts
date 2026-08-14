@@ -6,6 +6,8 @@ export type ApiErrorCode =
   | 'NOT_FOUND'
   | 'CONFLICT'
   | 'ACTION_COOLDOWN'
+  | 'FILE_TOO_LARGE'
+  | 'IMAGE_TOO_LARGE'
   | 'INTERNAL_ERROR'
 
 // Тело ответа об ошибке (envelope) — синхронизировано с server/src/common/errors/errors.handler.ts

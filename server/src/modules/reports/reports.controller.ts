@@ -2,6 +2,7 @@ import { FastifyRequest, FastifyReply } from 'fastify'
 import { ReportsService } from './reports.service'
 import { Readable } from 'stream'
 import { validationError } from '../../common/errors'
+import { UPLOAD_LIMITS } from '@shared/constants'
 
 import type { 
   CreateReportDto,
@@ -64,8 +65,9 @@ export function createReportsController(service: ReportsService) {
         return ['section','title', 'description'].includes(key)
       }
 
-      const parts = request.parts()
-      
+      // Доклады: общий лимит поднят до reportFileSize (pdf с иллюстрациями, сканы)
+      const parts = request.parts({ limits: { fileSize: UPLOAD_LIMITS.reportFileSize } })
+
       let file: MultipartFile | undefined
       const payload:CreateReportPayload = {
         userId: userId,
@@ -109,8 +111,9 @@ export function createReportsController(service: ReportsService) {
         return ['section','title', 'description', 'fileAnnotation'].includes(key)
       }
 
-      const parts = request.parts()
-      
+      // Доклады: общий лимит поднят до reportFileSize (pdf с иллюстрациями, сканы)
+      const parts = request.parts({ limits: { fileSize: UPLOAD_LIMITS.reportFileSize } })
+
       let file: MultipartFile | undefined
       const payload:UpdateReportPayload = {
         userId: userId,

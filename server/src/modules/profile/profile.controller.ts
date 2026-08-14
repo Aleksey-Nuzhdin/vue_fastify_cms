@@ -19,7 +19,9 @@ export function createProfileController(service: ProfileService) {
 
     async uploadAvatar(request: FastifyRequest, reply: FastifyReply):Promise<string> {
       const userId = request.user._id
-      const parts = request.parts()
+      // Размер файла ограничен общим лимитом (app.ts), здесь добавлен только
+      // files: 1 — в форме аватара второму файлу взяться неоткуда.
+      const parts = request.parts({ limits: { files: 1 } })
 
       let file: MultipartFile | undefined
 

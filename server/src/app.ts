@@ -9,6 +9,8 @@ import multipart from '@fastify/multipart'
 import staticModule from '@fastify/static'
 import path from 'path'
 
+import { UPLOAD_LIMITS } from '@shared/constants'
+
 import mongodbPlugin from './plugins/mongodb/mongodb'
 import fastifyJwt from './plugins/jwt'
 import redis from './plugins/redis'
@@ -32,9 +34,11 @@ export const buildApp = async () => {
     contentSecurityPolicy: false,
   })
   app.register(rateLimit, { max: 500, timeWindow: '1 minute' })
-  app.register(multipart, { 
+  app.register(multipart, {
     // attachFieldsToBody: true,
-    limits: { fileSize: 100 * 1024 * 1024 } // 100MB
+    // Общий лимит на все роуты. Кому нужно больше (storage, доклады) —
+    // поднимает его точечно через request.parts({ limits }) в своём контроллере.
+    limits: { fileSize: UPLOAD_LIMITS.defaultFileSize }
   })
   app.register(staticModule, {
     root: path.join(process.cwd(), 'public', 'upload'),

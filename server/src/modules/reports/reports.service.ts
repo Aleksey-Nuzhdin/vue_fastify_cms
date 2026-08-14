@@ -3,6 +3,7 @@ import { ReportsRepository } from './reports.repository'
 import { validationError, notFoundError } from '../../common/errors'
 import { ObjectId } from 'mongodb'
 import { buildUpdate } from '../../common/utils/buildUpdate'
+import { assertImageSize } from '../../common/utils/images.utils'
 import type { UserRole } from '../users/users.types'
 
 import type {
@@ -80,6 +81,7 @@ export function createReportsService(repo: ReportsRepository) {
         
       let filePath = ''
       if(data.fileAnnotation){
+        await assertImageSize(data.fileAnnotation)
         const { uuidFileName, folderPath } = await fsStorage.saveFileInFs(data.fileAnnotation, 'reports')
         filePath = folderPath + '/' + uuidFileName
       }
@@ -138,6 +140,7 @@ export function createReportsService(repo: ReportsRepository) {
       }
   
       if(fileAnnotation && typeof fileAnnotation === 'object' && 'file' in fileAnnotation && 'mimetype' in fileAnnotation){
+        await assertImageSize(fileAnnotation)
         const { uuidFileName, folderPath } = await fsStorage.saveFileInFs(fileAnnotation, 'reports')
         dataUpdate.fileAnnotation = folderPath + '/' + uuidFileName
         if(deletePath.startsWith('/reports/')) await fsStorage.deleteFile(deletePath)

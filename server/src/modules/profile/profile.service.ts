@@ -11,6 +11,7 @@ import { fsStorageService } from 'src/services/fsStorage.service'
 import type { MultipartFile } from '@fastify/multipart'
 
 import { buildUpdate } from '../../common/utils/buildUpdate'
+import { assertImageSize, assertIsImage } from '../../common/utils/images.utils'
 import { toPublicUser } from '../users/users.service'
 
 export function createProfileService(repository: UsersRepository) {
@@ -63,7 +64,10 @@ export function createProfileService(repository: UsersRepository) {
 
       const user = await repository.findById(userId)
       if( !user ) throw notFoundError('User', userId)
-      
+
+      assertIsImage(file)
+      await assertImageSize(file)
+
       // Сохранение файла
       const { folderPath } = await fsStorage.saveFileInFs(file, 'users/avatars')
 

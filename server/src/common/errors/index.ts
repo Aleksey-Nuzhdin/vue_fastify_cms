@@ -4,6 +4,8 @@ export {
   notFoundError,
   validationError,
   conflictError,
+  payloadTooLargeError,
+  imageTooLargeError,
   cooldownError,
   unauthorizedError,
   internalError,

@@ -32,6 +32,15 @@ export function conflictError(message: string): AppError {
   return createAppError(message, 409, 'CONFLICT')
 }
 
+export function payloadTooLargeError(message = 'File too large'): AppError {
+  return createAppError(message, 413, 'FILE_TOO_LARGE')
+}
+
+// Не про вес запроса, а про разрешение картинки — отсюда 400, а не 413
+export function imageTooLargeError(message = 'Image resolution too large'): AppError {
+  return createAppError(message, 400, 'IMAGE_TOO_LARGE')
+}
+
 export function cooldownError(message = 'Action on cooldown'): AppError {
   return createAppError(message, 429, 'ACTION_COOLDOWN')
 }

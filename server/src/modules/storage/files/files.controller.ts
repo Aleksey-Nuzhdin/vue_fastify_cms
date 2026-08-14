@@ -5,6 +5,7 @@ import type { FilesService } from './files.service'
 import type { MultipartFile } from '@fastify/multipart'
 import type {CreateFilePayload, UpdateFilePayload } from './files.types'
 import { buildUpdate } from 'src/common/utils/buildUpdate'
+import { UPLOAD_LIMITS } from '@shared/constants'
 
 export function createFilesController( service: FilesService ) {
   return {
@@ -16,7 +17,8 @@ export function createFilesController( service: FilesService ) {
       return service.getListByFolderId(request.params.id)
     },
     async create(request: FastifyRequest, reply: FastifyReply) {
-      const parts = request.parts()
+      // Админский storage: общий лимит поднят до storageFileSize
+      const parts = request.parts({ limits: { fileSize: UPLOAD_LIMITS.storageFileSize } })
 
       let file: MultipartFile | undefined
       const body: Record<string, string> = {}
@@ -42,7 +44,8 @@ export function createFilesController( service: FilesService ) {
     },
     async update(request: FastifyRequest<{ Params: { id: string }; Body: UpdateFilePayload }>, reply: FastifyReply) {
       const id = request.params.id
-      const parts = request.parts()
+      // Админский storage: общий лимит поднят до storageFileSize
+      const parts = request.parts({ limits: { fileSize: UPLOAD_LIMITS.storageFileSize } })
 
       let file: MultipartFile | undefined
       const body: Record<string, string> = {}

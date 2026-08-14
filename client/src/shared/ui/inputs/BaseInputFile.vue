@@ -14,6 +14,7 @@ interface Props {
   modelValue?: TypeModelValue
   readonly?: boolean
   field?: string
+  accept?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -95,6 +96,7 @@ const handleWrapperClick = (event: MouseEvent) => {
           class="base-input-file__field"
 
           type="file"
+          :accept
           :placeholder
           :disabled
           :readonly

@@ -81,14 +81,18 @@ export function useProfile() {
 
   // --- Avatar ---
 
-  const uploadAvatar = async (avatar: File): Promise<string> => {
+  const uploadAvatar = async (avatar: File) => {
     const formData = new FormData()
     formData.append('avatar', avatar)
 
-    const res = await profileApi.uploadAvatar(formData)
-    authStore.updateUser({ avatar: res })
-
-    return res
+    try {
+      const res = await profileApi.uploadAvatar(formData)
+      authStore.updateUser({ avatar: res })
+    } catch (error) {
+      if (isFetcherError(error)) return error
+      else return unknownError
+    }
+    return true
   }
 
   // --- Change password ---
